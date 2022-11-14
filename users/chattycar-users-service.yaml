@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: ChattyCar users service
+  description: ChattyCar users service
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:9001'
+    description: Development server
+paths:
+
+  /users:
+    post:
+      summary: Create user
+      requestBody:
+        description: User to create
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        400:
+          description: Incorrect user
+        409:
+          description: User already exists
+        200:
+          description: User created
+
+  /users/{user_id}:
+    parameters:
+      - name: user_id
+        in: path
+        description: Id of the user
+        schema:
+          type: integer
+          example: 23
+    get:
+      summary: Read user
+      responses:
+        404:
+          description: User not found
+        200:
+          description: User found
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/user'
+    put:
+      summary: Update user
+      requestBody:
+        description: New values of the user
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        400:
+          description: Incorrect user
+        404:
+          description: User not found
+        200:
+          description: User updated
+    delete:
+      summary: Delete user
+      responses:
+        404:
+          description: User not found
+        200:
+          description: User deleted
+
+  /users/{email}:
+    parameters:
+      - name: email
+        in: path
+        description: Email of the user
+        schema:
+          type: String
+          example: gregory.seront@vinci.be
+    get:
+      summary: Read user
+      responses:
+        404:
+          description: User not found
+        200:
+          description: User found
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/user'
+
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+      example:
+        id: 1
+        email: gregory.seront@vinci.be
+        firstname: Gregory
+        lastname: Seront
