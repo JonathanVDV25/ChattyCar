@@ -1,6 +1,6 @@
 package be.vinci.ipl.chattychar.trips;
 
-import be.vinci.ipl.chattycar.trips.models.Trip;
+import be.vinci.ipl.chattychar.trips.models.Trip;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

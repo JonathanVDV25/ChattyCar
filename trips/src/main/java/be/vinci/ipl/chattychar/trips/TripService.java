@@ -1,7 +1,7 @@
 package be.vinci.ipl.chattychar.trips;
 
-import be.vinci.ipl.chattycar.trips.models.NewTrip;
-import be.vinci.ipl.chattycar.trips.models.Trip;
+import be.vinci.ipl.chattychar.trips.models.NewTrip;
+import be.vinci.ipl.chattychar.trips.models.Trip;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,17 +29,6 @@ public class TripService {
    */
   public Trip readOneTrip(int id) {
     return repository.findById(id).orElse(null);
-  }
-
-  /**
-   * Updates a trip
-   * @param trip New values of the trip
-   * @return True if the trip could be updated, or false if the trip couldn't be found
-   */
-  public boolean updateOne(Trip trip) {
-    if (!repository.existsById(trip.getId())) return false;
-    repository.save(trip);
-    return true;
   }
 
   /**
