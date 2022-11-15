@@ -1,0 +1,95 @@
+### Get all trips
+GET http://localhost:9002/trips
+
+### Get all trips for specified departureDate
+GET http://localhost:9002/trips?departureDate=2022-10-27
+
+### Get all trips for specified originLatitude & originLongitude
+GET http://localhost:9002/trips?originLat=45.5&originLon=75.5
+
+### Get all trips for specified destinationLatitude & destinationLongitude
+GET http://localhost:9002/trips?destinationLat=89.9&destinationLon=100.2
+
+### Create trip
+POST http://localhost:9002/trips
+Content-Type: application/json
+
+{
+  "origin": {
+    "latitude": 45.5,
+    "longitude": 75.5
+  },
+  "destination": {
+    "latitude": 89.9,
+    "longitude": 100.2
+  },
+  "departureDate": "2022-10-27",
+  "driverId": 1,
+  "availableSeating": 4
+}
+
+### Create trip with different origin position
+POST http://localhost:9002/trips
+Content-Type: application/json
+
+{
+  "origin": {
+    "latitude": 57.5,
+    "longitude": 39.2
+  },
+  "destination": {
+    "latitude": 89.9,
+    "longitude": 100.2
+  },
+  "departureDate": "2022-10-27",
+  "driverId": 2,
+  "availableSeating": 4
+}
+
+### Create trip with different destination position
+POST http://localhost:9002/trips
+Content-Type: application/json
+
+{
+  "origin": {
+    "latitude": 45.5,
+    "longitude": 75.5
+  },
+  "destination": {
+    "latitude": 11.56,
+    "longitude": 86.78
+  },
+  "departureDate": "2022-10-27",
+  "driverId": 2,
+  "availableSeating": 4
+}
+
+### Create trip with different departureDate
+POST http://localhost:9002/trips
+Content-Type: application/json
+
+{
+  "origin": {
+    "latitude": 45.5,
+    "longitude": 75.5
+  },
+  "destination": {
+    "latitude": 89.9,
+    "longitude": 100.2
+  },
+  "departureDate": "2022-09-18",
+  "driverId": 2,
+  "availableSeating": 4
+}
+
+### Get one trip
+GET http://localhost:9002/trips/1
+
+### Delete one trip
+DELETE http://localhost:9002/trips/1
+
+### Get all trips of driver
+GET http://localhost:9002/trips/user/2
+
+### Delete all trips of driver
+DELETE http://localhost:9002/trips/user/2

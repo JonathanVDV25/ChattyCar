@@ -1,5 +1,6 @@
 package be.vinci.ipl.chattychar.trips.models;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +15,11 @@ import lombok.ToString;
 public class NewTrip {
   private Position origin;
   private Position destination;
-  private String departure;
+  private LocalDate departureDate;
   private int driverId;
   private int availableSeating;
 
   public Trip toTrip() {
-    return new Trip(1111, origin, destination, departure, driverId, availableSeating);
+    return new Trip(1111, origin, destination, departureDate, driverId, availableSeating);
   }
 }

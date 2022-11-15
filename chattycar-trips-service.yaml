@@ -121,8 +121,6 @@ paths:
     get:
       summary: Get trips where user is the driver with a future departure date
       responses:
-        404:
-          description: No user found with this ID
         200:
           description: Sent user driver trips
           content:
@@ -135,8 +133,6 @@ paths:
     delete:
       summary: Delete all trips of a driver
       responses:
-        404:
-          description: Driver not found
         200:
           description: All trips deleted
 
