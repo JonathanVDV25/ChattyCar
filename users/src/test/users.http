@@ -1,0 +1,25 @@
+### Create user
+POST http://localhost:9001/users
+Content-Type: application/json
+
+{
+  "email": "nicolas.dedoyard@student.vinci.be"
+  "firstname": "Nicolas",
+  "lastname": "Dedoyard"
+}
+
+### Read user by id
+GET http://localhost:9001/users/1
+
+### Update user
+PUT http://localhost:9001/users/1
+Content-Type: application/json
+
+{
+  "email": "nicolas.dedoyard@student.vinci.be",
+  "firstname": "Nico",
+  "lastname": "Dedoyard"
+}
+
+### Read user by email
+GET http://localhost:9001/users/{nicolas.dedoyard@student.vinci.be}
