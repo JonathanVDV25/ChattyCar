@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: ChattyCar distance service
+  description: ChattyCar distance service
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:9006'
+    description: Development server
+paths:
+  /distance/{originLatitude}/{originLongitude}/{destinationLatitude}/{destinationLongitude}:
+    parameters:
+      - name: originLatitude
+        in: path
+        required: true
+        description: originLatitude of the trip
+        schema:
+          type: number
+          example: 50.4.451009
+      - name: originLongitude
+        in: path
+        required: true
+        description: origin longitude of the trip
+        schema:
+          type: number
+          example: 47.4.451009
+      - name: destinationLatitude
+        in: path
+        required: true
+        description: destination latitude of the trip
+        schema:
+          type: number
+          example: 50.4.451009
+      - name: destinationLongitude
+        in: path
+        required: true
+        description: destination longitude of the trip
+        schema:
+          type: number
+          example: 47.4.451009
+
+    get:
+      summary: Compute the distance between two positions
+      responses:
+        400:
+          description: Missing parameter
+        200:
+          description: The distance was successfully calculated
+          content:
+            text/plain:
+              schema:
+                type: number
+                example: 155.2

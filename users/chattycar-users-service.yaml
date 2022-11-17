@@ -87,6 +87,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/user'
 
+components:
+  schemas:
     user:
       type: object
       properties:
