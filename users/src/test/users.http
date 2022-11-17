@@ -3,7 +3,7 @@ POST http://localhost:9001/users
 Content-Type: application/json
 
 {
-  "email": "nicolas.dedoyard@student.vinci.be"
+  "email": "nicolas.dedoyard@student.vinci.be",
   "firstname": "Nicolas",
   "lastname": "Dedoyard"
 }
@@ -22,4 +22,4 @@ Content-Type: application/json
 }
 
 ### Read user by email
-GET http://localhost:9001/users/{nicolas.dedoyard@student.vinci.be}
+GET http://localhost:9001/users/nicolas.dedoyard@student.vinci.be
