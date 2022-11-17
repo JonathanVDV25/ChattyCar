@@ -1,4 +1,4 @@
-package be.vinci.ipl.chattycar.users;
+package be.vinci.ipl.chattycar.users.models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

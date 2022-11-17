@@ -4,5 +4,7 @@ import be.vinci.ipl.chattycar.passengers.models.Passenger;
 import org.springframework.data.repository.CrudRepository;
 
 public interface PassengersRepository extends CrudRepository<Passenger, Integer> {
+  Iterable<Passenger> getByTripId(int tripId);
 
+  Iterable<Passenger> getByUserId(int userId);
 }

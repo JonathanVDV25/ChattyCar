@@ -1,4 +1,4 @@
-package be.vinci.ipl.chattycar.position;
+package be.vinci.ipl.chattycar.position.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

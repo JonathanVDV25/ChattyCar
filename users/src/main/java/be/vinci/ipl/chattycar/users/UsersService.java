@@ -1,5 +1,7 @@
 package be.vinci.ipl.chattycar.users;
 
+import be.vinci.ipl.chattycar.users.data.UsersRepository;
+import be.vinci.ipl.chattycar.users.models.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,10 +17,10 @@ public class UsersService {
    * @param user User to create
    * @return true if the user could be created, false if another user exists with this id
    */
-  public boolean createOne(User user) {
-    if (repository.existsById(user.getId())) return false;
-    repository.save(user);
-    return true;
+  public User createOne(User user) {
+    if (repository.existsById(user.getId())) return null;
+    User createdUser = repository.save(user);
+    return createdUser;
   }
 
   /**

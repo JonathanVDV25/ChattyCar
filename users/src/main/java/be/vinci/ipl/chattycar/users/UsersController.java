@@ -1,5 +1,6 @@
 package be.vinci.ipl.chattycar.users;
 
+import be.vinci.ipl.chattycar.users.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,13 +20,13 @@ public class UsersController {
   }
 
   @PostMapping("/users")
-  public ResponseEntity<Void> createOne(@RequestBody User user) {
+  public ResponseEntity<User> createOne(@RequestBody User user) {
     if (user.getEmail() == null || user.getLastname() == null || user.getFirstname() == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
-    boolean created = service.createOne(user);
-    if (!created) throw new ResponseStatusException(HttpStatus.CONFLICT);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    User createdUser = service.createOne(user);
+    if (createdUser == null) throw new ResponseStatusException(HttpStatus.CONFLICT);
+    return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
   }
 
   @GetMapping("/users/{id}")
