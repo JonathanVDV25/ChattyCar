@@ -1,0 +1,204 @@
+openapi: 3.0.3
+info:
+  title: ChattyCar trips service
+  description: ChattyCar trips service
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:9002'
+    description: Development server
+paths:
+
+  /trips:
+
+    get:
+      summary: Read list of trips, with filters of category and/or name
+      parameters:
+        - name: departure_date
+          in: query
+          required: false
+          description: Optional departure_date filter
+          schema:
+            type: string
+            example: 2022-10-24
+        - name: originLat
+          in: query
+          required: false
+          description: Optional Latitude of the origin position filter
+          schema:
+            type: number
+            example: 50.4.451009
+        - name: originLon
+          in: query
+          required: false
+          description: Optional Longitude of the starting position filter
+          schema:
+            type: number
+            example: 4.451009
+        - name: destinationLat
+          in: query
+          required: false
+          description: Optional Latitude of the destination position filter
+          schema:
+            type: number
+            example: 50.849372
+        - name: destinationLon
+          in: query
+          required: false
+          description: Optionnal Longitude of the destination position filter
+          schema:
+            type: number
+            example: 4.451009
+      responses:
+        400:
+          description: Both latitude and longitude should be specified for a position query
+        200:
+          description: Sent list of trips found
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/trip'
+
+    post:
+      summary: Create a trip
+      requestBody:
+        description: trip to create
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/newTrip'
+      responses:
+        400:
+          description: Trip in request is not correct
+        201:
+          description: Trip is created, sent trip created with its assigned ID
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/trip'
+
+  /trips/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the trip
+        schema:
+          type: integer
+          example: 1
+
+    get:
+      summary: Read a trip
+      responses:
+        404:
+          description: No trip found with this ID
+        200:
+          description: Sent trip information
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/trip'
+
+    delete:
+      summary: Delete a trip
+      responses:
+        404:
+          description: Trip not found
+        200:
+          description: Trip deleted
+
+  /trips/{driver_id}:
+    parameters:
+      - name: driver_id
+        in: path
+        required: true
+        description: ID of the driver of the trip
+        schema:
+          type: integer
+          example: 1
+
+    get:
+      summary: Get trips where user is the driver with a future departure date
+      responses:
+        200:
+          description: Sent user driver trips
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/trip"
+
+    delete:
+      summary: Delete all trips of a driver
+      responses:
+        200:
+          description: All trips deleted
+
+components:
+  schemas:
+    position:
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+      example:
+        latitude: 50.849372
+        longitude: 4.451009
+
+    newTrip:
+      type: object
+      properties:
+        origin:
+          $ref: '#/components/schemas/position'
+        destination:
+          $ref: '#/components/schemas/position'
+        departure_date:
+          type: string
+          description: Date in ISO 8601, YYYY-MM-DD
+        driver_id:
+          type: integer
+        available_seating:
+          type: integer
+      example:
+        origin:
+          latitude: 50.849372
+          longitude: 4.451009
+        destination:
+          latitude: 50.849372
+          longitude: 4.451009
+        departure: 2022-10-24
+        driver_id: 12
+        available_seating: 2
+
+    trip:
+      type: object
+      properties:
+        id:
+          type: integer
+        origin:
+          $ref: '#/components/schemas/position'
+        destination:
+          $ref: '#/components/schemas/position'
+        departure:
+          type: string
+          description: Date in ISO 8601, YYYY-MM-DD
+        driver_id:
+          type: integer
+        available_seating:
+          type: integer
+      example:
+        id: 38
+        origin:
+          latitude: 50.849372
+          longitude: 4.451009
+        destination:
+          latitude: 50.849372
+          longitude: 4.451009
+        departure: 2022-10-24 10:45:00
+        driver_id: 12
+        available_seating: 2
+
