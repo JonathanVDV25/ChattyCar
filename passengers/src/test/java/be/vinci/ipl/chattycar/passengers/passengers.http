@@ -1,0 +1,18 @@
+### Create one passenger
+POST http://localhost:9004/passengers/1/1
+
+### Get one passenger
+GET http://localhost:9004/passengers/1/1
+
+### Update one passenger
+PUT http://localhost:9004/passengers/1/1
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "tripId": 1,
+  "status": "AcCePtEd"
+}
+
+### Delete one passenger
+DELETE http://localhost:9004/passengers/1/1
