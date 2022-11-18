@@ -61,16 +61,15 @@ paths:
                 $ref: "#/components/schemas/trip"
     put:
       summary: Update passenger status
-      parameters:
-        requestBody:
-          description: New status of the passenger
-          content:
-            'application/json':
-              schema:
-                type: string
-                enum:
-                  - accepted
-                  - refused
+      requestBody:
+        description: New status of the passenger
+        content:
+          'application/json':
+            schema:
+              type: string
+              enum:
+                - accepted
+                - refused
       responses:
         400:
           description: User is not a passenger, or is not in pending status, or status not in accepted value

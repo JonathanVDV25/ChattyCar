@@ -5,7 +5,6 @@ import be.vinci.ipl.chattycar.passengers.models.NoIdPassenger;
 import be.vinci.ipl.chattycar.passengers.models.Passenger;
 import be.vinci.ipl.chattycar.passengers.data.TripsProxy;
 import be.vinci.ipl.chattycar.passengers.data.UsersProxy;
-import be.vinci.ipl.chattycar.passengers.models.Passenger;
 import be.vinci.ipl.chattycar.passengers.models.Trip;
 import be.vinci.ipl.chattycar.passengers.models.User;
 import java.util.stream.StreamSupport;
@@ -33,9 +32,7 @@ public class PassengersService {
   }
 
   public void deleteAllTripsFromUserWhereUserIsPassenger(int userId) {
-    Iterable<Passenger> passengers = repository.getByUserId(userId);
-    StreamSupport.stream(passengers.spliterator(), false)
-        .forEach(passenger -> repository.delete(passenger));
+    repository.deleteAllByUserId(userId);
   }
 
   public Iterable<User> getPassengersOfTrip(int tripId) {
@@ -46,9 +43,7 @@ public class PassengersService {
   }
 
   public void deleteAllPassengersOfTrip(int tripId) {
-    Iterable<Passenger> passengers = repository.getByTripId(tripId);
-    StreamSupport.stream(passengers.spliterator(), false)
-        .forEach(passenger -> repository.delete(passenger));
+    repository.deleteAllByTripId(tripId);
   }
 
   public NoIdPassenger getOne(int tripId, int userId) {
