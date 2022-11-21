@@ -29,4 +29,9 @@ public class GatewayService {
         return authenticationProxy.verify(token);
     }
 
+    public void createOneUser(UserWithCredentials user){
+        usersProxy.createUser(user.getEmail(), user.toUser());
+        authenticationProxy.createCredentials(user.getEmail(), user.toCredentials());
+    }
+
 }

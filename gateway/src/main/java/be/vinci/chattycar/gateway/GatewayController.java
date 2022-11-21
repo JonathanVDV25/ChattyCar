@@ -27,9 +27,9 @@ public class GatewayController {
 
 
     @PostMapping("/users") // create a new user
-    void createOneUser(@RequestBody UserWithCredentials user) {
+    ResponseEntity<Void> createOneUser(@RequestBody UserWithCredentials user) {
         service.createOneUser(user);
-        //TODO
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
     void findOneUser(@PathParam("email") String email){
