@@ -35,7 +35,7 @@ public class PassengersService {
     repository.deleteAllByUserId(userId);
   }
 
-  public Iterable<User> getPassengersOfTrip(int tripId) {
+  public Iterable <User> getPassengersOfTrip(int tripId) {
     Iterable<Passenger> passengers = repository.getByTripId(tripId);
     return StreamSupport.stream(passengers.spliterator(), false)
         .map(passenger -> usersProxy.readUser(passenger.getUserId()))
