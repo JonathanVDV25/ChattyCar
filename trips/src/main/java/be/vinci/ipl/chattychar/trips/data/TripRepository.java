@@ -3,9 +3,7 @@ package be.vinci.ipl.chattychar.trips.data;
 import be.vinci.ipl.chattychar.trips.models.Position;
 import be.vinci.ipl.chattychar.trips.models.Trip;
 import java.time.LocalDate;
-import javax.persistence.Tuple;
 import javax.transaction.Transactional;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

@@ -54,9 +54,9 @@ public class PassengersController {
         passenger.getStatus() == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
-    if (passenger.getStatus().equalsIgnoreCase(PassengerStatus.ACCEPTED.toString()) &&
-        passenger.getStatus().equalsIgnoreCase(PassengerStatus.PENDING.toString()) &&
-        passenger.getStatus().equalsIgnoreCase(PassengerStatus.REFUSED.toString())) {
+    if (!passenger.getStatus().equalsIgnoreCase(PassengerStatus.ACCEPTED.toString()) &&
+        !passenger.getStatus().equalsIgnoreCase(PassengerStatus.PENDING.toString()) &&
+        !passenger.getStatus().equalsIgnoreCase(PassengerStatus.REFUSED.toString())) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
