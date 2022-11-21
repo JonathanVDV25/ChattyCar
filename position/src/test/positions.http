@@ -1,2 +1,0 @@
-### Calculate distance
-GET http://localhost:9006/distance/{40.768030}/{-73.981924}/{37.819522}/{-122.478470}
