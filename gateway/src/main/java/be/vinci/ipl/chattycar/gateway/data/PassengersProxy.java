@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PassengersProxy {
   @PostMapping("/passengers/{trip_id}/{user_id}")
   NoIdPassenger createOnePassenger(@PathVariable(name = "trip_id") Integer tripId,
-      @PathVariable(name = "user_id") Integer userId);
+                                   @PathVariable(name = "user_id") Integer userId);
 
   @GetMapping("/passengers/{trip_id}/{user_id}")
   NoIdPassenger getOnePassenger(@PathVariable(name = "trip_id") Integer tripId,
