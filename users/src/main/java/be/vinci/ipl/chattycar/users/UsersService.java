@@ -1,6 +1,7 @@
 package be.vinci.ipl.chattycar.users;
 
 import be.vinci.ipl.chattycar.users.data.UsersRepository;
+import be.vinci.ipl.chattycar.users.models.NoIdUser;
 import be.vinci.ipl.chattycar.users.models.User;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,12 @@ public class UsersService {
 
   /**
    * Creates a user
-   * @param user User to create
+   * @param noIdUser User to create without id
    * @return true if the user could be created, false if another user exists with this id
    */
-  public User createOne(User user) {
-    if (repository.existsById(user.getId())) return null;
-    return repository.save(user);
+  public User createOne(NoIdUser noIdUser) {
+    if (repository.findByEmail(noIdUser.getEmail()) != null) return null;
+    return repository.save(noIdUser.toUser());
   }
 
   /**
