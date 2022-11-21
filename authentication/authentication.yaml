@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Chatty Car Ride Sharing Service Gateway API
-  description: API for the gateway service of Chatty Car, the ride sharing app.
+  title: Chatty Car Ride Sharing Service Authentication API
+  description: API for the authentication service of Chatty Car, the ride sharing app.
   version: 1.0.0
 servers:
   - url: 'http://localhost:9007'
@@ -55,6 +55,7 @@ paths:
   /authentication/{email}:
     parameters:
       - name: email
+        required: true
         in: path
         description: Email of the user
         schema:
