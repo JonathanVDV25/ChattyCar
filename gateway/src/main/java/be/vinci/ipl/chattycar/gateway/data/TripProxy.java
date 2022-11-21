@@ -1,8 +1,10 @@
 package be.vinci.ipl.chattycar.gateway.data;
 
-import be.vinci.ipl.chattycar.gateway.models.NewTrip;
 import be.vinci.ipl.chattycar.gateway.models.Trip;
+import be.vinci.ipl.chattycar.gateway.models.NewTrip;
+
 import java.time.LocalDate;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -20,10 +22,10 @@ public interface TripProxy {
 
   @GetMapping("/trips")
   Iterable<Trip> readAll(@RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate departureDate,
-      @RequestParam(required = false) Double originLat,
-      @RequestParam(required = false) Double originLon,
-      @RequestParam(required = false) Double destinationLat,
-      @RequestParam(required = false) Double destinationLon);
+                         @RequestParam(required = false) Double originLat,
+                         @RequestParam(required = false) Double originLon,
+                         @RequestParam(required = false) Double destinationLat,
+                         @RequestParam(required = false) Double destinationLon);
 
   @PostMapping("/trips")
   Trip createOne(@RequestBody NewTrip trip);
