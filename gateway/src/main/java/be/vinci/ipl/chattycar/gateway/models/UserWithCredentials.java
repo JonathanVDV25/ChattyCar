@@ -1,5 +1,6 @@
-package be.vinci.chattycar.gateway.models;
+package be.vinci.ipl.chattycar.gateway.models;
 
+import be.vinci.chattycar.gateway.models.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ public class UserWithCredentials {
     private String lastname;
     private String password;
 
-    public User toUser() {
+    public be.vinci.chattycar.gateway.models.User toUser() {
         return new User(id, email, firstname, lastname);
     }
     public Credentials toCredentials() {

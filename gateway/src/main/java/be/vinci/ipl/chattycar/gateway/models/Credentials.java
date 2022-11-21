@@ -1,4 +1,4 @@
-package be.vinci.chattycar.gateway.models;
+package be.vinci.ipl.chattycar.gateway.models;
 
 import lombok.*;
 
