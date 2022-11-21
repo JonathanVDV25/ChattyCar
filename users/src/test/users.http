@@ -16,10 +16,11 @@ PUT http://localhost:9001/users/1
 Content-Type: application/json
 
 {
+  "id": 1,
   "email": "nicolas.dedoyard@student.vinci.be",
   "firstname": "Nico",
   "lastname": "Dedoyard"
 }
 
 ### Read user by email
-GET http://localhost:9001/users/nicolas.dedoyard@student.vinci.be
+GET http://localhost:9001/users/email/nicolas.dedoyard@student.vinci.be

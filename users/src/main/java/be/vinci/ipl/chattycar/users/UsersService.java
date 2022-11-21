@@ -19,8 +19,7 @@ public class UsersService {
    */
   public User createOne(User user) {
     if (repository.existsById(user.getId())) return null;
-    User createdUser = repository.save(user);
-    return createdUser;
+    return repository.save(user);
   }
 
   /**
@@ -47,6 +46,7 @@ public class UsersService {
    * @return True if the user could be updated, false if the user couldn't be found
    */
   public boolean updateOne(User user) {
+    System.out.println(user);
     if (!repository.existsById(user.getId())) return false;
     repository.save(user);
     return true;

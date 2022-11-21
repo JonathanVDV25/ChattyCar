@@ -46,7 +46,7 @@ public class UsersController {
     if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
   }
 
-  @GetMapping("/users/{email}")
+  @GetMapping("/users/email/{email}")
   public User readOneByEmail(@PathVariable String email) {
     User user = service.readOneByEmail(email);
     if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
