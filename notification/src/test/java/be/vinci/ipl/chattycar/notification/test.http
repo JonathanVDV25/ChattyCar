@@ -1,0 +1,17 @@
+### Create notification
+POST http://localhost:9005/notifications/1/2
+Content-Type: application/json
+
+{
+  "userId" : 1,
+  "tripId" : 2
+}
+
+### Get all notification from a user
+GET http://localhost:9005/notifications/1
+
+### Delete all notifications for a user
+DELETE http://localhost:9005/notifications/1
+
+### Delete all notifications associated to a trip
+DELETE http://localhost:9005/notification/2
