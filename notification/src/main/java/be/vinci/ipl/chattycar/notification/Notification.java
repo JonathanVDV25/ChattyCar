@@ -25,7 +25,6 @@ public class Notification {
     private int tripId;
 
     public Notification(int id_user, int id_trip){
-        this.id = 0;
         this.userId = id_user;
         this.tripId = id_trip;
     }
