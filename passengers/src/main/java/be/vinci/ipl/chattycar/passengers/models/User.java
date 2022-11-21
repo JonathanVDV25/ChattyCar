@@ -1,7 +1,5 @@
-package be.vinci.ipl.chattycar.users;
+package be.vinci.ipl.chattycar.passengers.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,9 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-@Entity(name = "users")
 public class User {
-  @Id
   private int id;
   private String email;
   private String firstname;
