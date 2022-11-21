@@ -4,7 +4,7 @@ import be.vinci.ipl.chattycar.gateway.models.Credentials;
 import be.vinci.ipl.chattycar.gateway.models.UserWithCredentials;
 import org.springframework.stereotype.Service;
 
-import be.vinci.chattycar.gateway.data.*;
+import be.vinci.ipl.chattycar.gateway.data.*;
 
 @Service
 public class GatewayService {
