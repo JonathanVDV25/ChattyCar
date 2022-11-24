@@ -1,4 +1,4 @@
-package be.vinci.ipl.chattycar.gateway.models;
+package be.vinci.chattycar.gateway.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +12,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-  private int id;
-  private String email;
-  private String firstname;
-  private String lastname;
+    private int id;
+    private String email;
+    private String firstname;
+    private String lastname;
 }

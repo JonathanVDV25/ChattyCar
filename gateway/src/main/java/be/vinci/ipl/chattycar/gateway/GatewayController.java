@@ -33,12 +33,12 @@ public class GatewayController {
     }
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
     void findOneUser(@PathParam("email") String email){
-        service.findOneUser();
+        //service.findOneUser();
         //TODO
     }
     @PutMapping("/users") //update user password
     void updateOneUserPassword(){
-        service.findOneUser();
+        //service.findOneUser();
         //TODO
     }
 

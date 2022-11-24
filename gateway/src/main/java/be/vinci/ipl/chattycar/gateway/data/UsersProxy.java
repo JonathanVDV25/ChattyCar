@@ -1,27 +1,25 @@
-package be.vinci.ipl.chattycar.gateway.data;
+package be.vinci.chattycar.gateway.data;
 
-import be.vinci.ipl.chattycar.gateway.models.NoIdUser;
-import be.vinci.ipl.chattycar.gateway.models.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import be.vinci.chattycar.gateway.models.User;
 
 @Repository
 @FeignClient(name = "users")
 public interface UsersProxy {
-  @PostMapping("/users")
-  User createOne(@RequestBody NoIdUser noIdUser);
 
-  @GetMapping("/users/{id}")
-  User readOneById(@PathVariable int id);
+    @PostMapping("/users/{pseudo}")
+    void createUser(@PathVariable String pseudo, @RequestBody User user);
 
-  @PutMapping("/users/{id}")
-  void updateOne(@PathVariable int id, @RequestBody User user);
+    @GetMapping("/users/{pseudo}")
+    User readUser(@PathVariable String pseudo);
 
-  @GetMapping("/users/email/{email}")
-  User readOneByEmail(@PathVariable String email);
+    @PutMapping("/users/{pseudo}")
+    void updateUser(@PathVariable String pseudo, @RequestBody User user);
+
+    @DeleteMapping("/users/{pseudo}")
+    void deleteUser(@PathVariable String pseudo);
+
 }

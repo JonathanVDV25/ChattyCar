@@ -1,4 +1,5 @@
-package be.vinci.chattycar.gateway.models;
+package be.vinci.ipl.chattycar.notification;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +10,16 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class NoIdPassenger {
+@AllArgsConstructor
+public class Notification {
 
+  private int id;
   private int userId;
   private int tripId;
-  private String status;
+
+  public Notification(int id_user, int id_trip){
+    this.userId = id_user;
+    this.tripId = id_trip;
+  }
 }

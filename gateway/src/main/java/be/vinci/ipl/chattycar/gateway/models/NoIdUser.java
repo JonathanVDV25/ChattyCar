@@ -1,4 +1,4 @@
-package be.vinci.ipl.chattycar.gateway.models;
+package be.vinci.chattycar.gateway.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
