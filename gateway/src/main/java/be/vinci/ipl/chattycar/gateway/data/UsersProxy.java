@@ -1,10 +1,9 @@
-package be.vinci.chattycar.gateway.data;
+package be.vinci.ipl.chattycar.gateway.data;
 
+import be.vinci.ipl.chattycar.gateway.models.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
-
-import be.vinci.chattycar.gateway.models.User;
 
 @Repository
 @FeignClient(name = "users")

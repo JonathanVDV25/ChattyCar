@@ -1,4 +1,4 @@
-package be.vinci.chattycar.gateway.config;
+package be.vinci.ipl.chattycar.gateway.config;
 
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;

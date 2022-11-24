@@ -1,4 +1,4 @@
-package be.vinci.ipl.chattycar.notification;
+package be.vinci.ipl.chattycar.gateway.models;
 
 
 import lombok.AllArgsConstructor;

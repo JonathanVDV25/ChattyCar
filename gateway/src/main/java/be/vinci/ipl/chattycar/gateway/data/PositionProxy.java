@@ -1,4 +1,4 @@
-package be.vinci.chattycar.gateway.data;
+package be.vinci.ipl.chattycar.gateway.data;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;

@@ -1,11 +1,12 @@
-package be.vinci.chattycar.gateway;
+package be.vinci.ipl.chattycar.gateway;
 
+import be.vinci.ipl.chattycar.gateway.models.Credentials;
+import be.vinci.ipl.chattycar.gateway.models.UserWithCredentials;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import be.vinci.chattycar.gateway.models.*;
 
 import javax.ws.rs.PathParam;
 
