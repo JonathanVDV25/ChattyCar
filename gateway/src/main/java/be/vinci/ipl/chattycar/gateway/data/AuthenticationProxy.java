@@ -6,22 +6,22 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 @Repository
-@FeignClient(name = "auth")
+@FeignClient(name = "authentication")
 public interface AuthenticationProxy {
 
-    @PostMapping("/auth/connect")
+    @PostMapping("/authentication/connect")
     String connect(@RequestBody Credentials credentials);
 
-    @PostMapping("/auth/verify")
+    @PostMapping("/authentication/verify")
     String verify(@RequestBody String token);
 
-    @PostMapping("/auth/{email}")
+    @PostMapping("/authentication/{email}")
     void createCredentials(@PathVariable String email, @RequestBody Credentials credentials);
 
-    @PutMapping("/auth/{email}")
+    @PutMapping("/authentication/{email}")
     void updateCredentials(@PathVariable String email, @RequestBody Credentials credentials);
 
-    @DeleteMapping("/auth/{email}")
+    @DeleteMapping("/authentication/{email}")
     void deleteCredentials(@PathVariable String email);
 
 }

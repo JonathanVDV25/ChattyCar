@@ -3,9 +3,42 @@ POST http://localhost:9007/users
 Content-Type: application/json
 
 {
-  "email": "f@a.com",
+  "email": "aaaa@a.com",
   "firstname": "a",
   "lastname":  "b",
   "password": "a"
+
+}
+
+
+
+
+
+
+### get user by email
+GET http://localhost:9007/users?email=azaea@a.com
+
+
+
+###Connect user
+POST http://localhost:9007/auth
+Content-Type: application/json
+
+{
+  "email": "aaaa@a.com",
+  "password": "a"
+}
+
+> {%client.global.set("token", response.body)%}
+
+
+### update user password
+PUT  http://localhost:9007/users
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "email": "aaaa@a.com",
+  "password": "123"
 
 }

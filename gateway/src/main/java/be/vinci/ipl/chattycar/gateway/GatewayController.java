@@ -1,6 +1,7 @@
 package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.Credentials;
+import be.vinci.ipl.chattycar.gateway.models.User;
 import be.vinci.ipl.chattycar.gateway.models.UserWithCredentials;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,19 +29,20 @@ public class GatewayController {
 
 
     @PostMapping("/users") // create a new user
-    ResponseEntity<HttpStatus> createOneUser(@RequestBody UserWithCredentials user) {
-        service.createOneUser(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    ResponseEntity<User> createOneUser(@RequestBody UserWithCredentials user) {
+        return new ResponseEntity<>(service.createOneUser(user), HttpStatus.CREATED);
     }
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
-    void findOneUser(@PathParam("email") String email){
-        //service.findOneUser();
-        //TODO
+    ResponseEntity<User> findOneUser(@PathParam("email") String email){
+        return new ResponseEntity<>(service.getOneUser(email),HttpStatus.OK);
+
     }
     @PutMapping("/users") //update user password
-    void updateOneUserPassword(){
-        //service.findOneUser();
-        //TODO
+    void updateOneUser(@RequestBody Credentials credentials, @RequestHeader("Authorization") String token){
+        if(token==null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        String emailToken = service.verify(token);
+        if(!emailToken.equals(credentials.getEmail())) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        service.updateOneUser(credentials);
     }
 
     @GetMapping("/users/{id}") //get user info
