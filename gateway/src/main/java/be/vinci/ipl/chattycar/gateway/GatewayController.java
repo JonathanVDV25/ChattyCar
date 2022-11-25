@@ -28,7 +28,7 @@ public class GatewayController {
 
 
     @PostMapping("/users") // create a new user
-    ResponseEntity<Void> createOneUser(@RequestBody UserWithCredentials user) {
+    ResponseEntity<HttpStatus> createOneUser(@RequestBody UserWithCredentials user) {
         service.createOneUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
