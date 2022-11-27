@@ -5,6 +5,7 @@ import be.vinci.ipl.chattycar.gateway.data.NotificationProxy;
 import be.vinci.ipl.chattycar.gateway.data.TripProxy;
 import be.vinci.ipl.chattycar.gateway.data.UsersProxy;
 import be.vinci.ipl.chattycar.gateway.models.Credentials;
+import be.vinci.ipl.chattycar.gateway.models.User;
 import be.vinci.ipl.chattycar.gateway.models.UserWithCredentials;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,17 @@ public class GatewayService {
         return authenticationProxy.verify(token);
     }
 
-    public void createOneUser(UserWithCredentials user){
-        usersProxy.createOne(user.toNoIdUser());
+    public User createOneUser(UserWithCredentials user){
         authenticationProxy.createCredentials(user.getEmail(), user.toCredentials());
+        return usersProxy.createOne(user.toNoIdUser());
+    }
+
+    public User getOneUser(String email) {
+        return usersProxy.readOneByEmail(email);
+    }
+
+    public void updateOneUser(Credentials credentials) {
+        authenticationProxy.updateCredentials(credentials.getEmail(), credentials);
     }
 
 }
