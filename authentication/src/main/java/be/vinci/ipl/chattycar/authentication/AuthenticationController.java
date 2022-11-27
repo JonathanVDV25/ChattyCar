@@ -1,5 +1,6 @@
 package be.vinci.ipl.chattycar.authentication;
 
+import be.vinci.ipl.chattycar.authentication.models.Credentials;
 import be.vinci.ipl.chattycar.authentication.models.InsecureCredentials;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,14 @@ public class AuthenticationController {
         return new ResponseEntity<>(HttpStatus.CREATED); //201
     }
 
+    @GetMapping("/authentication/{email}")
+    public Credentials getOne(@PathVariable String email) {
+        Credentials credentials = service.getOne(email);
+        System.out.println("getOne credentials: "+credentials);
+        if (credentials == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return credentials;
+    }
+
     @PutMapping("/authentication/{email}")
     public void updateOne(@PathVariable String email, @RequestBody InsecureCredentials credentials) {
         if (credentials.getEmail() == null || credentials.getPassword() == null ||
@@ -33,6 +42,17 @@ public class AuthenticationController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST); //400
         }
         boolean found = service.updateOne(credentials);
+        if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND); //404
+    }
+
+    @PutMapping("/authentication/credentials/{email}")
+    public void updateOne(@PathVariable String email, @RequestBody Credentials credentials) {
+        if (credentials.getEmail() == null || credentials.getHashedPassword() == null ||
+            !credentials.getEmail().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST); //400
+        }
+        boolean found = service.updateOne(credentials);
+        System.out.println("updateOne credentials: "+found);
         if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND); //404
     }
 
@@ -60,4 +80,5 @@ public class AuthenticationController {
         if (email == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED); //401
         return email;
     }
+
 }

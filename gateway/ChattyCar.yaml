@@ -339,9 +339,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/trip'
 
-  /trips/{trip_id}:
+  /trips/{id}:
     parameters:
-      - name: trip_id
+      - name: id
         in: path
         required: true
         schema:
@@ -374,14 +374,14 @@ paths:
         200:
           description: Trip is deleted
 
-  /trips/{trip_id}/passengers:
+  /trips/{id}/passengers:
     get:
       summary: Get list of passengers of a trip, with pending, accepted and refused status
       security:
         - authentication:
             - driver
       parameters:
-        - name: trip_id
+        - name: id
           in: path
           required: true
           schema:

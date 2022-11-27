@@ -7,20 +7,24 @@ Content-Type: application/json
   "firstname": "a",
   "lastname":  "b",
   "password": "a"
+}
+
+### Create second user
+POST http://localhost:9007/users
+Content-Type: application/json
+
+{
+  "email": "jonathan@gmail.com",
+  "firstname": "jonathan",
+  "lastname":  "vdv",
+  "password": "notsaying"
 
 }
 
-
-
-
-
-
 ### get user by email
-GET http://localhost:9007/users?email=azaea@a.com
+GET http://localhost:9007/users?email=aaaa@a.com
 
-
-
-###Connect user
+### Connect user aaaa@a.com
 POST http://localhost:9007/auth
 Content-Type: application/json
 
@@ -31,6 +35,16 @@ Content-Type: application/json
 
 > {%client.global.set("token", response.body)%}
 
+### Connect user jonathan@gmail.com
+POST http://localhost:9007/auth
+Content-Type: application/json
+
+{
+  "email": "jonathan@gmail.com",
+  "password": "notsaying"
+}
+
+> {%client.global.set("jonathanToken", response.body)%}
 
 ### update user password
 PUT  http://localhost:9007/users
@@ -40,5 +54,20 @@ Authorization: {{token}}
 {
   "email": "aaaa@a.com",
   "password": "123"
+}
 
+### Get one user
+GET http://localhost:9007/users/1
+Authorization: {{jonathanToken}}
+
+### Update one user
+PUT http://localhost:9007/users/1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "id": 1,
+  "email": "Daniel@gmail.com",
+  "firstname": "Daniel",
+  "lastname":  "Nigap2"
 }

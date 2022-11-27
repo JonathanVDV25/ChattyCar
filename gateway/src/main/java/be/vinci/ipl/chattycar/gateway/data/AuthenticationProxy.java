@@ -12,6 +12,9 @@ public interface AuthenticationProxy {
     @PostMapping("/authentication/connect")
     String connect(@RequestBody Credentials credentials);
 
+    @GetMapping("/authentication/{email}")
+    Credentials getOne(@PathVariable String email);
+
     @PostMapping("/authentication/verify")
     String verify(@RequestBody String token);
 
@@ -20,6 +23,9 @@ public interface AuthenticationProxy {
 
     @PutMapping("/authentication/{email}")
     void updateCredentials(@PathVariable String email, @RequestBody Credentials credentials);
+
+    @PutMapping("/authentication/credentials/{email}")
+    void updateOne(@PathVariable String email, @RequestBody Credentials credentials);
 
     @DeleteMapping("/authentication/{email}")
     void deleteCredentials(@PathVariable String email);

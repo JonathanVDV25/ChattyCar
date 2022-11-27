@@ -43,8 +43,20 @@ public class GatewayService {
         return usersProxy.readOneByEmail(email);
     }
 
+    public User getOneUser(int id) {
+        return usersProxy.readOneById(id);
+    }
+
     public void updateOneUser(Credentials credentials) {
         authenticationProxy.updateCredentials(credentials.getEmail(), credentials);
+    }
+
+    public void updateOneUser(int userId, User user) {
+        usersProxy.updateOne(userId, user);
+    }
+
+    public Credentials getOneUserCredentials(String email) {
+        return authenticationProxy.getOne(email);
     }
 
 }

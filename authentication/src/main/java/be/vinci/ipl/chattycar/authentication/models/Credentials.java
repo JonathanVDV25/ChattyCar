@@ -10,6 +10,7 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity(name = "credentials")
 public class Credentials {
     @Id

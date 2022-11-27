@@ -35,6 +35,15 @@ public class AuthenticationService {
     }
 
     /**
+     * Get credentials based on email. Password is hashed
+     * @param email the email we're looking for
+     * @return the credentials found, null else
+     */
+    public Credentials getOne(String email) {
+        return repository.findById(email).orElse(null);
+    }
+
+    /**
      * Updates user credentials
      * @param credentials The credentials to create, with insecure password
      * @return True if the credentials were updated, false if they couldn't be found
@@ -43,6 +52,17 @@ public class AuthenticationService {
         if (!repository.existsById(credentials.getEmail())) return false;
         String hashedPassword = BCrypt.hashpw(credentials.getPassword(), BCrypt.gensalt());
         repository.save(credentials.toCredentials(hashedPassword));
+        return true;
+    }
+
+    /**
+     * Updates user credentials with a given hashed password
+     * @param credentials The credentials to update, with secure password
+     * @return True if the credentials were updated, false if they couldn't be found
+     */
+    public boolean updateOne(Credentials credentials) {
+        if (!repository.existsById(credentials.getEmail())) return false;
+        repository.save(credentials);
         return true;
     }
 
