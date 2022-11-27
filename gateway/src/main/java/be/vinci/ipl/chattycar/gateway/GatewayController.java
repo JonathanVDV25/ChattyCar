@@ -24,6 +24,7 @@ public class GatewayController {
 
     @PostMapping("/auth") //connect user and retrieve auth JWT token
     String connect(@RequestBody Credentials credentials) {
+        System.out.println("/auth de gatewayController:"+credentials);
         return service.connect(credentials);
     }
 
@@ -71,10 +72,10 @@ public class GatewayController {
         // Update credentials in case email has changed
         if (!userFound.getEmail().equals(user.getEmail())) {
             System.out.println("if de gateway");
-            Credentials credentials = service.getOneUserCredentials(userFound.getEmail()); // 400, 404
-            credentials.setEmail(user.getEmail());
-            System.out.println("if 2 gateway");
-            service.updateOneUser(credentials); // 400, 404
+            //Credentials credentials = service.getOneUserCredentials(userFound.getEmail()); // 400, 404
+            //credentials.setEmail(user.getEmail());
+            //System.out.println("if 2 gateway:"+email);
+            service.updateOneUserEmailCred(userFound.getEmail(), user.getEmail()); // 400, 404
             System.out.println("if 3 gateway");
         }
     }

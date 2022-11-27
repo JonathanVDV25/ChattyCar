@@ -8,6 +8,8 @@ import be.vinci.ipl.chattycar.gateway.models.Credentials;
 import be.vinci.ipl.chattycar.gateway.models.User;
 import be.vinci.ipl.chattycar.gateway.models.UserWithCredentials;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Service
@@ -50,6 +52,9 @@ public class GatewayService {
     public void updateOneUser(Credentials credentials) {
         authenticationProxy.updateCredentials(credentials.getEmail(), credentials);
     }
+    public void updateOneUserEmailCred(String oldEmail, String newEmail) {
+        authenticationProxy.updateOneOnlyEmail(oldEmail, newEmail);
+    }
 
     public void updateOneUser(int userId, User user) {
         usersProxy.updateOne(userId, user);
@@ -58,5 +63,6 @@ public class GatewayService {
     public Credentials getOneUserCredentials(String email) {
         return authenticationProxy.getOne(email);
     }
+
 
 }

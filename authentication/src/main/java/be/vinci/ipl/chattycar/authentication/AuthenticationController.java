@@ -45,13 +45,9 @@ public class AuthenticationController {
         if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND); //404
     }
 
-    @PutMapping("/authentication/credentials/{email}")
-    public void updateOne(@PathVariable String email, @RequestBody Credentials credentials) {
-        if (credentials.getEmail() == null || credentials.getHashedPassword() == null ||
-            !credentials.getEmail().equals(email)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST); //400
-        }
-        boolean found = service.updateOne(credentials);
+    @PutMapping("/authentication/email/{oldEmail}")
+    public void updateOneOnlyEmail(@PathVariable String oldEmail, @RequestBody String newEmail) {
+        boolean found = service.updateOne(oldEmail, newEmail);
         System.out.println("updateOne credentials: "+found);
         if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND); //404
     }
@@ -65,6 +61,7 @@ public class AuthenticationController {
 
     @PostMapping("/authentication/connect")
     public String connect(@RequestBody InsecureCredentials credentials) {
+        System.out.println("ce qui arrive:"+credentials);
         if (credentials.getEmail() == null || credentials.getPassword() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST); //400
         }

@@ -56,12 +56,18 @@ public class AuthenticationService {
     }
 
     /**
-     * Updates user credentials with a given hashed password
-     * @param credentials The credentials to update, with secure password
+     * Updates email of a user credential
+     * @param oldEmail The old email to find in DB
+     * @param newEmail The new email to be updated
      * @return True if the credentials were updated, false if they couldn't be found
      */
-    public boolean updateOne(Credentials credentials) {
-        if (!repository.existsById(credentials.getEmail())) return false;
+    public boolean updateOne(String oldEmail, String newEmail) {
+        Credentials credentials = repository.findById(oldEmail).orElse(null);
+        if (credentials == null) return false;
+
+        repository.deleteById(oldEmail);
+        // need to delete otherwise the save method won't erase the oldEmail
+        credentials.setEmail(newEmail);
         repository.save(credentials);
         return true;
     }
