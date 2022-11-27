@@ -54,12 +54,14 @@ public class GatewayController {
         if(service.verify(token) == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         return service.getOneUser(id);
     }
+
     @PutMapping("/users/{id}") // update user info
     void updateOneUserInfo(@RequestBody User user, @RequestHeader("Authorization") String token,
                             @PathVariable int id) {
         if (user.getId() != id) throw new ResponseStatusException(HttpStatus.BAD_REQUEST); //400
 
         String emailToken = service.verify(token);
+        System.out.println(emailToken);
         if (emailToken == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED); // 401
 
         // if user.getEmail is a new email -> need to verify on userId !!
@@ -68,15 +70,9 @@ public class GatewayController {
 
         service.updateOneUser(id, user); // 400, 404 || 200
 
-        System.out.println("passe123");
         // Update credentials in case email has changed
         if (!userFound.getEmail().equals(user.getEmail())) {
-            System.out.println("if de gateway");
-            //Credentials credentials = service.getOneUserCredentials(userFound.getEmail()); // 400, 404
-            //credentials.setEmail(user.getEmail());
-            //System.out.println("if 2 gateway:"+email);
             service.updateOneUserEmailCred(userFound.getEmail(), user.getEmail()); // 400, 404
-            System.out.println("if 3 gateway");
         }
     }
     @DeleteMapping("/users/{id}") //delete user

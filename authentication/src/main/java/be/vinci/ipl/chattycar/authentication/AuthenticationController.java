@@ -61,7 +61,6 @@ public class AuthenticationController {
 
     @PostMapping("/authentication/connect")
     public String connect(@RequestBody InsecureCredentials credentials) {
-        System.out.println("ce qui arrive:"+credentials);
         if (credentials.getEmail() == null || credentials.getPassword() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST); //400
         }

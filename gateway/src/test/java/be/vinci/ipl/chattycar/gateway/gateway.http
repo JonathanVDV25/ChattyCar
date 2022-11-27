@@ -61,13 +61,18 @@ GET http://localhost:9007/users/1
 Authorization: {{jonathanToken}}
 
 ### Update one user
-PUT http://localhost:9007/users/1
+PUT http://localhost:9007/users/2
 Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "id": 1,
-  "email": "Daniel@gmail.com",
+  "id": 2,
+  "email": "aaaa@a.com",
   "firstname": "Daniel",
   "lastname":  "Nigap2"
 }
+### TODO IF email is new -> credentialEmail will be changed in DB. But the token will keep the old email
+
+### Get one user
+GET http://localhost:9007/users/2
+Authorization: {{token}}
