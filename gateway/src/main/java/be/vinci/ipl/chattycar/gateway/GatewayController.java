@@ -32,8 +32,8 @@ public class GatewayController {
     }
 
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
-    void findOneUser(@RequestHeader("email") String email){
-        service.findOneUser(email);
+    User findOneUser(@RequestHeader("email") String email){
+        return service.findOneUser(email);
     }
 
     @PutMapping("/users") //update user password
@@ -42,8 +42,8 @@ public class GatewayController {
     }
 
     @GetMapping("/users/{id}") //get user info
-    void getOneUserInfo(@PathVariable int id){
-        service.getOneUserInfo(id);
+    User getOneUserInfo(@PathVariable int id){
+        return service.getOneUserInfo(id);
     }
 
     @PutMapping("/users/{id}") // update user info
@@ -57,8 +57,8 @@ public class GatewayController {
     }
 
     @GetMapping("/users/{id}/driver") //get trips where user is driver (departure in future)
-    void getAllDriverTrips(@PathVariable int id){
-        service.getAllDriverTrips(id);
+    Iterable<Trip> getAllDriverTrips(@PathVariable int id){
+        return service.getAllDriverTrips(id);
     }
 
     @GetMapping("/users/{id}/passenger") //get trips where user is passenger (departure in future)

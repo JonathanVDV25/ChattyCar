@@ -20,18 +20,7 @@ import lombok.ToString;
 public class Trip {
 
   private int id;
-//  @Embedded
-//  @AttributeOverrides({
-//      @AttributeOverride(name = "latitude", column = @Column(name = "origin_latitude")),
-//      @AttributeOverride(name = "longitude", column = @Column(name = "origin_longitude"))
-//  })
   private Position origin;
-
-//  @Embedded
-//  @AttributeOverrides({
-//      @AttributeOverride(name = "latitude", column = @Column(name = "destination_latitude")),
-//      @AttributeOverride(name = "longitude", column = @Column(name = "destination_longitude"))
-//  })
   private Position destination;
   @JsonProperty("departure_date")
   @Column(name = "departure_date")

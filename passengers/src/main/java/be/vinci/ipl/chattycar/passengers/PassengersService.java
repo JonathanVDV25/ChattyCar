@@ -4,9 +4,7 @@ import be.vinci.ipl.chattycar.passengers.data.PassengersRepository;
 import be.vinci.ipl.chattycar.passengers.models.NoIdPassenger;
 import be.vinci.ipl.chattycar.passengers.models.Passenger;
 import be.vinci.ipl.chattycar.passengers.data.TripsProxy;
-import be.vinci.ipl.chattycar.passengers.data.UsersProxy;
 import be.vinci.ipl.chattycar.passengers.models.Trip;
-import be.vinci.ipl.chattycar.passengers.models.User;
 import java.util.stream.StreamSupport;
 import org.springframework.stereotype.Service;
 
