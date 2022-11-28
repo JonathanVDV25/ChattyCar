@@ -4,6 +4,7 @@ import be.vinci.ipl.chattycar.users.models.NoIdUser;
 import be.vinci.ipl.chattycar.users.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,12 @@ public class UsersController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
     boolean found = service.updateOne(user);
+    if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+  }
+
+  @DeleteMapping("/users/{id}")
+  public void deleteOne(@PathVariable int id) {
+    boolean found = service.deleteOne(id);
     if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
   }
 

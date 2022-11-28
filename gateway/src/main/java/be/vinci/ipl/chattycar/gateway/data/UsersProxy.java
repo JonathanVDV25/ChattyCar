@@ -4,6 +4,7 @@ import be.vinci.ipl.chattycar.gateway.models.NewUser;
 import be.vinci.ipl.chattycar.gateway.models.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,9 @@ public interface UsersProxy {
 
   @PutMapping("/users/{id}")
   void updateOne(@PathVariable int id, @RequestBody User user);
+
+  @DeleteMapping("/users/{id}")
+  void deleteOne(@PathVariable int id);
 
   @GetMapping("/users/email/{email}")
   User readOneByEmail(@PathVariable String email);

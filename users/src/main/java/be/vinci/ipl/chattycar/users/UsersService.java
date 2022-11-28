@@ -47,9 +47,19 @@ public class UsersService {
    * @return True if the user could be updated, false if the user couldn't be found
    */
   public boolean updateOne(User user) {
-    System.out.println(user);
     if (!repository.existsById(user.getId())) return false;
     repository.save(user);
+    return true;
+  }
+
+  /**
+   * Deletes a user
+   * @param id Id of the user to delete
+   * @return True if the user could be deleted, false if the user couldn't be found
+   */
+  public boolean deleteOne(int id) {
+    if (!repository.existsById(id)) return false;
+    repository.deleteById(id);
     return true;
   }
 
