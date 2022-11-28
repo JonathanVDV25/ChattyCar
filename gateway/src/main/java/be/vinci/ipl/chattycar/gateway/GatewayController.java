@@ -57,8 +57,8 @@ public class GatewayController {
     }
 
     @GetMapping("/users/{id}/driver") //get trips where user is driver (departure in future)
-    void getAllDriverTrips(@PathVariable int id){
-        service.getAllDriverTrips(id);
+    Iterable<Trip> getAllDriverTrips(@PathVariable int id){
+        return service.getAllDriverTrips(id);
     }
 
     @GetMapping("/users/{id}/passenger") //get trips where user is passenger (departure in future)
