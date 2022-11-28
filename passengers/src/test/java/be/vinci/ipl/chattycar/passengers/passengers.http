@@ -12,8 +12,8 @@ PUT http://localhost:9004/passengers/1/1
 Content-Type: application/json
 
 {
-  "userId": 1,
-  "tripId": 1,
+  "user_id": 1,
+  "trip_id": 1,
   "status": "AcCePtEd"
 }
 

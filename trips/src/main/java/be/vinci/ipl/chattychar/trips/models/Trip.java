@@ -1,5 +1,6 @@
 package be.vinci.ipl.chattychar.trips.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -38,10 +39,13 @@ public class Trip {
       @AttributeOverride(name = "longitude", column = @Column(name = "destination_longitude"))
   })
   private Position destination;
+  @JsonProperty("departure_date")
   @Column(name = "departure_date")
   private LocalDate departureDate;
+  @JsonProperty("driver_id")
   @Column(name = "driver_id")
   private int driverId;
+  @JsonProperty("available_seating")
   @Column(name = "available_seating")
   private int availableSeating;
 }
