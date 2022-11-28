@@ -1,28 +1,33 @@
 package be.vinci.ipl.chattycar.gateway.data;
 
+import be.vinci.ipl.chattycar.gateway.models.Credentials;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
-import be.vinci.ipl.chattycar.gateway.models.Credentials;
-
 @Repository
-@FeignClient(name = "auth")
+@FeignClient(name = "authentication")
 public interface AuthenticationProxy {
 
-    @PostMapping("/auth/connect")
+    @PostMapping("/authentication/connect")
     String connect(@RequestBody Credentials credentials);
 
-    @PostMapping("/auth/verify")
+    @GetMapping("/authentication/{email}")
+    Credentials getOne(@PathVariable String email);
+
+    @PostMapping("/authentication/verify")
     String verify(@RequestBody String token);
 
-    @PostMapping("/auth/{email}")
+    @PostMapping("/authentication/{email}")
     void createCredentials(@PathVariable String email, @RequestBody Credentials credentials);
 
-    @PutMapping("/auth/{email}")
+    @PutMapping("/authentication/{email}")
     void updateCredentials(@PathVariable String email, @RequestBody Credentials credentials);
 
-    @DeleteMapping("/auth/{email}")
+    @PutMapping("/authentication/email/{oldEmail}")
+    void updateOneOnlyEmail(@PathVariable String oldEmail, @RequestBody String newEmail);
+
+    @DeleteMapping("/authentication/{email}")
     void deleteCredentials(@PathVariable String email);
 
 }

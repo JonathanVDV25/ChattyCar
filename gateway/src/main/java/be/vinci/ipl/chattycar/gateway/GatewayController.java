@@ -5,10 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.PathParam;
 import java.time.LocalDate;
 
-@CrossOrigin(origins = { "http://localhost" })
+@CrossOrigin(origins = { "http://localhost:53709/", "http://localhost" })
 @RestController
 public class GatewayController {
 
