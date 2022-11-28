@@ -42,8 +42,8 @@ public class GatewayController {
     }
 
     @GetMapping("/users/{id}") //get user info
-    void getOneUserInfo(@PathVariable int id){
-        service.getOneUserInfo(id);
+    User getOneUserInfo(@PathVariable int id){
+        return service.getOneUserInfo(id);
     }
 
     @PutMapping("/users/{id}") // update user info
