@@ -1,15 +1,10 @@
 package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-<<<<<<< HEAD
-import javax.management.Notification;
-=======
->>>>>>> 4b17c11522b38f54370e06f093b6ea6c8708e05a
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = { "http://localhost:53709/", "http://localhost" })
 @RestController
@@ -105,21 +100,13 @@ public class GatewayController {
     }
 
     @GetMapping("/trips/{id}/passengers") //get list of passenger of a trip (with status)
-<<<<<<< HEAD
     Map<PassengerStatus, List<Passenger>> getAllPassengersStatus(@PathVariable int tripId){
-=======
-    Iterable<Passenger> getAllPassengersStatus(@PathVariable int tripId){
->>>>>>> 4b17c11522b38f54370e06f093b6ea6c8708e05a
         return service.getAllPassengersStatus(tripId);
     }
 
     @PostMapping("/trips/{trip_id}/passengers/{user_id}") // add passenger to trip (with pending status)
     void addOnePassenger(@PathVariable int tripId, @PathVariable int userId){
-<<<<<<< HEAD
         service.addOnePassenger(tripId, userId); // TODO No return value expected but service returns NoIdPasseneger
-=======
-        service.addOnePassenger(tripId, userId);
->>>>>>> 4b17c11522b38f54370e06f093b6ea6c8708e05a
     }
 
     @GetMapping("/trips/{trip_id}/passengers/{user_id}") // get passenger status
