@@ -1,18 +1,13 @@
 package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.Notification;
-import javax.ws.rs.PathParam;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
-@CrossOrigin(origins = { "http://localhost" })
+@CrossOrigin(origins = { "http://localhost:53709/", "http://localhost" })
 @RestController
 public class GatewayController {
 
@@ -39,8 +34,8 @@ public class GatewayController {
     }
 
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
-    User findOneUser(@RequestHeader("email") String email){
-        return service.findOneUser(email);
+    void findOneUser(@RequestHeader("email") String email){
+        service.findOneUser(email);
     }
 
     @PutMapping("/users") //update user password
@@ -49,8 +44,8 @@ public class GatewayController {
     }
 
     @GetMapping("/users/{id}") //get user info
-    User getOneUserInfo(@PathVariable int id){
-        return service.getOneUserInfo(id);
+    void getOneUserInfo(@PathVariable int id){
+        service.getOneUserInfo(id);
     }
 
     @PutMapping("/users/{id}") // update user info
@@ -64,18 +59,18 @@ public class GatewayController {
     }
 
     @GetMapping("/users/{id}/driver") //get trips where user is driver (departure in future)
-    Iterable<Trip> getAllDriverTrips(@PathVariable int id){
-        return service.getAllDriverTrips(id);
+    void getAllDriverTrips(@PathVariable int id){
+        service.getAllDriverTrips(id);
     }
 
     @GetMapping("/users/{id}/passenger") //get trips where user is passenger (departure in future)
-    Map<PassengerStatus, List<Trip>> getAllPassengerTrips(@PathVariable int id){
-        return service.getAllPassengerTrips(id);
+    void getAllPassengerTrips(@PathVariable int id){
+        service.getAllPassengerTrips(id);
     }
 
     @GetMapping("/users/{id}/notifications") //get user notifs
-    Iterable<Notification> getAllNotifs(@PathVariable int id){
-        return service.getAllNotifs(id);
+    void getAllNotifs(@PathVariable int id){
+        service.getAllNotifs(id);
     }
 
     @DeleteMapping("/users/{id}/notifications") //delete all notif from user
@@ -84,23 +79,21 @@ public class GatewayController {
     }
 
     @PostMapping("/trips") //create a trip
-    Trip createOneTrip(@RequestBody NewTrip trip){
-        return service.createOneTrip(trip);
+    void createOneTrip(@RequestBody NewTrip trip){
+        service.createOneTrip(trip);
     }
 
     @GetMapping("/trips") //get list of trip with optional search queries
-    Iterable<Trip> searchAllTrips(@RequestHeader(value = "departure_date", required = false)
-                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dDate,
-                                  @RequestHeader(value = "originLat", required = false) Double oLat,
-                                  @RequestHeader(value = "originLon", required = false) Double oLon,
-                                  @RequestHeader(value = "destinationLat", required = false) Double dLat,
-                                  @RequestHeader(value = "destinationLon", required = false) Double dLon){
-        return service.searchAllTrips(dDate, oLat, oLon, dLat, dLon);
+    void searchAllTrips(@RequestHeader("departure_date") String depDate,
+                        @RequestHeader("originLat") double oLat, @RequestHeader("originLon") double oLon,
+                        @RequestHeader("destinationLat") double dLat, @RequestHeader("destinationLon") double dLon){
+        LocalDate dDate = LocalDate.parse(depDate); //TODO verif
+        service.searchAllTrips(dDate, oLat, oLon, dLat, dLon);
     }
 
     @GetMapping("/trips/{trip_id}") //get trip informations
-    Trip getOneTripInformations(@PathVariable int tripId){
-        return service.getOneTripInformations(tripId);
+    void getOneTripInformations(@PathVariable int tripId){
+        service.getOneTripInformations(tripId);
     }
 
     @DeleteMapping("/trips/{trip_id}") //delete trip
@@ -109,18 +102,18 @@ public class GatewayController {
     }
 
     @GetMapping("/trips/{id}/passengers") //get list of passenger of a trip (with status)
-    Map<PassengerStatus, List<Passenger>> getAllPassengersStatus(@PathVariable int tripId){
-        return service.getAllPassengersStatus(tripId); // TODO
+    Iterable<Passenger> getAllPassengersStatus(@PathVariable int tripId){
+        return service.getAllPassengersStatus(tripId);
     }
 
     @PostMapping("/trips/{trip_id}/passengers/{user_id}") // add passenger to trip (with pending status)
-    NoIdPassenger addOnePassenger(@PathVariable int tripId, @PathVariable int userId){
-        return service.addOnePassenger(tripId, userId);
+    void addOnePassenger(@PathVariable int tripId, @PathVariable int userId){
+        service.addOnePassenger(tripId, userId);
     }
 
     @GetMapping("/trips/{trip_id}/passengers/{user_id}") // get passenger status
-    String getOnePassengerStatus(@PathVariable int tripId, @PathVariable int userId){
-        return service.getOnePassengerStatus(tripId, userId);
+    void getOnePassengerStatus(@PathVariable int tripId, @PathVariable int userId){
+        service.getOnePassengerStatus(tripId, userId);
     }
 
     @PutMapping("/trips/{trip_id}/passengers/{user_id}") // update passenger status
