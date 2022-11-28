@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.Notification;
-import javax.ws.rs.PathParam;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +32,8 @@ public class GatewayController {
 
 
     @PostMapping("/users") // create a new user
-    ResponseEntity<Void> createOneUser(@RequestBody NewUser user) {
-        service.createOneUser(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    User createOneUser(@RequestBody NewUser user) {
+        return service.createOneUser(user);
     }
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
     User findOneUser(@RequestHeader("email") String email){
@@ -100,12 +98,12 @@ public class GatewayController {
 
     @GetMapping("/trips/{id}/passengers") //get list of passenger of a trip (with status)
     Map<PassengerStatus, List<Passenger>> getAllPassengersStatus(@PathVariable int tripId){
-        return service.getAllPassengersStatus(tripId); // TODO
+        return service.getAllPassengersStatus(tripId);
     }
 
     @PostMapping("/trips/{trip_id}/passengers/{user_id}") // add passenger to trip (with pending status)
-    NoIdPassenger addOnePassenger(@PathVariable int tripId, @PathVariable int userId){
-        return service.addOnePassenger(tripId, userId);
+    void addOnePassenger(@PathVariable int tripId, @PathVariable int userId){
+        service.addOnePassenger(tripId, userId); // TODO No return value expected but service returns NoIdPasseneger
     }
     @GetMapping("/trips/{trip_id}/passengers/{user_id}") // get passenger status
     String getOnePassengerStatus(@PathVariable int tripId, @PathVariable int userId){
