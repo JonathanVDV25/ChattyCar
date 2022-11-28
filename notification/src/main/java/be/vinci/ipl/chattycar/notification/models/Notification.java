@@ -1,6 +1,8 @@
-package be.vinci.ipl.chattycar.notification;
+package be.vinci.ipl.chattycar.notification.models;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.Column;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,11 +23,15 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @JsonProperty("user_id")
+    @Column(name = "user_id")
     private int userId;
+    @JsonProperty("trip_id")
+    @Column(name = "trip_id")
     private int tripId;
 
-    public Notification(int id_user, int id_trip){
-        this.userId = id_user;
-        this.tripId = id_trip;
+    public Notification(int userId, int tripId){
+        this.userId = userId;
+        this.tripId = tripId;
     }
 }

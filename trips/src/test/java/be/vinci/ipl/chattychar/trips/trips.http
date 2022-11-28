@@ -23,9 +23,9 @@ Content-Type: application/json
     "latitude": 89.9,
     "longitude": 100.2
   },
-  "departureDate": "2022-10-27",
-  "driverId": 1,
-  "availableSeating": 4
+  "departure_date": "2022-10-27",
+  "driver_id": 1,
+  "available_seating": 4
 }
 
 ### Create trip with different origin position
@@ -41,9 +41,9 @@ Content-Type: application/json
     "latitude": 89.9,
     "longitude": 100.2
   },
-  "departureDate": "2022-10-27",
-  "driverId": 2,
-  "availableSeating": 4
+  "departure_date": "2022-10-27",
+  "driver_id": 2,
+  "available_seating": 4
 }
 
 ### Create trip with different destination position
@@ -59,9 +59,9 @@ Content-Type: application/json
     "latitude": 11.56,
     "longitude": 86.78
   },
-  "departureDate": "2022-10-27",
-  "driverId": 2,
-  "availableSeating": 4
+  "departure_date": "2022-10-27",
+  "driver_id": 2,
+  "available_seating": 4
 }
 
 ### Create trip with different departureDate
@@ -77,9 +77,9 @@ Content-Type: application/json
     "latitude": 89.9,
     "longitude": 100.2
   },
-  "departureDate": "2022-09-18",
-  "driverId": 2,
-  "availableSeating": 4
+  "departure_date": "2022-09-18",
+  "driver_id": 2,
+  "available_seating": 4
 }
 
 ### Get one trip
