@@ -93,7 +93,7 @@ paths:
         200:
           description: Password is updated
 
-  /users/{id}:
+  /users/{user_id}:
     parameters:
       - name: id
         in: path

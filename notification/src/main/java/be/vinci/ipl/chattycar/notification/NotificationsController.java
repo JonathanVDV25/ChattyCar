@@ -1,5 +1,6 @@
 package be.vinci.ipl.chattycar.notification;
 
+import be.vinci.ipl.chattycar.notification.models.NoIdNotification;
 import be.vinci.ipl.chattycar.notification.models.Notification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,47 +15,27 @@ public class NotificationsController {
         this.service = notificationsService;
     }
 
-    /**
-     * Create a new notification to user
-     * @request POST/notifications/{id_user}/{id_trip}
-     * @response 409: notification already exists, 201:
-     */
-    @PostMapping("/notifications/{id_user}/{id_trip}")
-    public ResponseEntity<Void> createNotification(@RequestBody Notification notification) {
-        boolean created = service.createNotificationToUser(notification);
-        if(!created) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    @PostMapping("/notifications")
+    public ResponseEntity<Notification> createNotification(@RequestBody NoIdNotification noIdNotification) {
+        Notification notification = service.createOne(noIdNotification);
+        if(notification == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(notification, HttpStatus.CREATED);
     }
 
-    /**
-     * Get all notification from a user
-     * @request GET/notifications/{id_user}
-     * @response 404: if there's no notification, 200 if there is
-     */
-    @GetMapping("/notifications/{id_user}")
-    public Iterable<Notification> getNotification(@PathVariable int id_user){
-        return service.getAllNotificationForAUser(id_user);
+    @GetMapping("/notifications/{user_id}")
+    public Iterable<Notification> getNotification(@PathVariable("user_id") int userId){
+        return service.getAllNotificationForAUser(userId);
     }
 
-    /**
-     * Delete all notification from a user
-     * @request DELETE/notifications/{id_user}
-     * @response 404: if there's no notification, 200 if there is
-     */
-    @DeleteMapping("/notifications/{id_user}")
-    public void removeNotificationOfAUser(@PathVariable int id_user){
-        boolean found = service.deleteAllNotification(id_user);
+    @DeleteMapping("/notifications/{user_id}")
+    public void removeNotificationOfAUser(@PathVariable("user_id") int userId){
+        boolean found = service.deleteAllNotification(userId);
         if(!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    /**
-     * Delete all notification associated to a trip
-     * @request DELETE/notification/{id_trip}
-     * @response 404: if there's no trip, 200 if there is
-     */
-    @DeleteMapping("/notification/{id_trip}")
-    public void removeNotificationOfATrip(@PathVariable int id_trip){
-        boolean found = service.deleteNotificationOfATrip(id_trip);
+    @DeleteMapping("/notification/{trip_id}")
+    public void removeNotificationOfATrip(@PathVariable("trip_id") int tripId){
+        boolean found = service.deleteNotificationOfATrip(tripId);
         if(!found) throw  new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 

@@ -16,7 +16,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/user'
+              $ref: '#/components/schemas/newUser'
       responses:
         400:
           description: Incorrect user
@@ -67,13 +67,13 @@ paths:
         200:
           description: User deleted
 
-  /users/{email}:
+  /users/email/{email}:
     parameters:
       - name: email
         in: path
         description: Email of the user
         schema:
-          type: String
+          type: string
           example: gregory.seront@vinci.be
     get:
       summary: Read user
@@ -102,6 +102,20 @@ components:
           type: string
       example:
         id: 1
+        email: gregory.seront@vinci.be
+        firstname: Gregory
+        lastname: Seront
+
+    newUser:
+      type: object
+      properties:
+        email:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+      example:
         email: gregory.seront@vinci.be
         firstname: Gregory
         lastname: Seront

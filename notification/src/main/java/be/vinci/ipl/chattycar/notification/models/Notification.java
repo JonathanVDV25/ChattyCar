@@ -3,6 +3,7 @@ package be.vinci.ipl.chattycar.notification.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.Column;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "notifications")
 public class Notification {
 
