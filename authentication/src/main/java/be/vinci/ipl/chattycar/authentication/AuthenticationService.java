@@ -74,7 +74,7 @@ public class AuthenticationService {
     /**
      * Verifies a JWT token
      * @param token The token
-     * @return The pseudo of the user in the token, or null if the token couldn't be decoded or the user couldn't be found
+     * @return The email of the user in the token, or null if the token couldn't be decoded or the user couldn't be found
      */
     public String verify(String token) {
         try {

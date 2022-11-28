@@ -1,17 +1,20 @@
 package be.vinci.ipl.chattycar.gateway;
 
-import be.vinci.ipl.chattycar.gateway.models.Credentials;
-import be.vinci.ipl.chattycar.gateway.models.UserWithCredentials;
+import be.vinci.ipl.chattycar.gateway.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.PathParam;
+import java.time.LocalDate;
 
 @CrossOrigin(origins = { "http://localhost" })
 @RestController
 public class GatewayController {
 
+    // TODO check return values
+    // TODO check @RequestBody, @PathVariable, @RequestHeader
+    // TODO check to use verify(token)
     private final GatewayService service;
 
     public GatewayController(GatewayService service) {
@@ -26,87 +29,88 @@ public class GatewayController {
 
 
     @PostMapping("/users") // create a new user
-    ResponseEntity<Void> createOneUser(@RequestBody UserWithCredentials user) {
+    ResponseEntity<Void> createOneUser(@RequestBody NewUser user) {
         service.createOneUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
-    void findOneUser(@PathParam("email") String email){
-        service.findOneUser();
-        //TODO
+    void findOneUser(@RequestHeader("email") String email){
+        service.findOneUser(email);
     }
     @PutMapping("/users") //update user password
-    void updateOneUserPassword(){
-        service.findOneUser();
-        //TODO
+    void updateOneUserPassword(@RequestBody Credentials user){
+        service.updateOneUserPassword(user);
     }
 
     @GetMapping("/users/{id}") //get user info
-    void getOneUserInfo(){
-        //TODO
+    void getOneUserInfo(@PathVariable int id){
+        service.getOneUserInfo(id);
     }
     @PutMapping("/users/{id}") // update user info
-    void updateOneUserInfo(){
-        //TODO
+    void updateOneUserInfo(@PathVariable int id, @RequestBody User user){
+        service.updateOneUserInfo(id, user);
     }
     @DeleteMapping("/users/{id}") //delete user
-    void deleteOneUser(){
-        //TODO
+    void deleteOneUser(@PathVariable int id){
+        service.deleteOneUser(id);
     }
 
     @GetMapping("/users/{id}/driver") //get trips where user is driver (departure in future)
-    void getAllDriverTrips(){
-        //TODO
+    void getAllDriverTrips(@PathVariable int id){
+        service.getAllDriverTrips(id);
     }
     @GetMapping("/users/{id}/passenger") //get trips where user is passenger (departure in future)
-    void getAllPassengerTrips(){
-        //TODO
+    void getAllPassengerTrips(@PathVariable int id){
+        service.getAllPassengerTrips(id);
     }
     @GetMapping("/users/{id}/notifications") //get user notifs
-    void getAllNotifs(){
-        //TODO
+    void getAllNotifs(@PathVariable int id){
+        service.getAllNotifs(id);
     }
     @DeleteMapping("/users/{id}/notifications") //delete all notif from user
-    void deleteAllNotifs(){
-        //TODO
+    void deleteAllNotifs(@PathVariable int id){
+        service.deleteAllNotifs(id);
     }
 
     @PostMapping("/trips") //create a trip
-    void createOneTrip(){
-        //TODO
+    void createOneTrip(@RequestBody NewTrip trip){
+        service.createOneTrip(trip);
     }
     @GetMapping("/trips") //get list of trip with optional search queries
-    void searchAllTrips(){
-        //TODO
+    void searchAllTrips(@RequestHeader("departure_date") String depDate,
+                        @RequestHeader("originLat") double oLat, @RequestHeader("originLon") double oLon,
+                        @RequestHeader("destinationLat") double dLat, @RequestHeader("destinationLon") double dLon){
+        LocalDate dDate = LocalDate.parse(depDate); //TODO verif
+        service.searchAllTrips(dDate, oLat, oLon, dLat, dLon);
     }
     @GetMapping("/trips/{trip_id}") //get trip informations
-    void getOneTripInformations(){
-        //TODO
+    void getOneTripInformations(@PathVariable int tripId){
+        service.getOneTripInformations(tripId);
     }
     @DeleteMapping("/trips/{trip_id}") //delete trip
-    void deleteOneTrip(){
-        //TODO
+    void deleteOneTrip(@PathVariable int tripId){
+        service.deleteOneTrip(tripId);
     }
 
-    @GetMapping("/trips/{trip_id}/passengers") //get list of passenger of a trip (with status)
-    void getAllPassengersStatus(){
-        //TODO
+    @GetMapping("/trips/{id}/passengers") //get list of passenger of a trip (with status)
+    Iterable<Passenger> getAllPassengersStatus(@PathVariable int tripId){
+        return service.getAllPassengersStatus(tripId);
     }
 
     @PostMapping("/trips/{trip_id}/passengers/{user_id}") // add passenger to trip (with pending status)
-    void addOnePassenger(){
-        //TODO
+    void addOnePassenger(@PathVariable int tripId, @PathVariable int userId){
+        service.addOnePassenger(tripId, userId);
     }
     @GetMapping("/trips/{trip_id}/passengers/{user_id}") // get passenger status
-    void getOnePassengerStatus(){
-        //TODO
+    void getOnePassengerStatus(@PathVariable int tripId, @PathVariable int userId){
+        service.getOnePassengerStatus(tripId, userId);
     }
     @PutMapping("/trips/{trip_id}/passengers/{user_id}") // update passenger status
-    void updateOnePassengerStatus(){
-        //TODO
+    void updateOnePassengerStatus(@PathVariable int tripId, @PathVariable int userId, @RequestBody NoIdPassenger passenger){
+        service.updateOnePassengerStatus(tripId, userId, passenger);
     }
     @DeleteMapping("/trips/{trip_id}/passengers/{user_id}") // remove passenger from trip
-    void deleteOnePassenger(){
-        //TODO
+    void deleteOnePassenger(@PathVariable int tripId, @PathVariable int userId){
+        service.deleteOnePassenger(tripId, userId);
     }
 }

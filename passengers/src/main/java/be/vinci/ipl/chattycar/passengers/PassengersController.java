@@ -84,7 +84,7 @@ public class PassengersController {
   }
 
   @GetMapping("/passengers/{trip_id}")
-  public Iterable<User> getPassengersOfTrip(@PathVariable int trip_id) {
+  public Iterable<Passenger> getPassengersOfTrip(@PathVariable int trip_id) {
     return service.getPassengersOfTrip(trip_id);
   }
 
