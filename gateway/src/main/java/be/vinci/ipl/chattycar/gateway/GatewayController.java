@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.PathParam;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = { "http://localhost:53709/", "http://localhost" })
 @RestController
@@ -29,13 +32,16 @@ public class GatewayController {
 
     @PostMapping("/users") // create a new user
     ResponseEntity<Void> createOneUser(@RequestBody NewUser user) {
+
         service.createOneUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
-    void findOneUser(@RequestHeader("email") String email){
-        service.findOneUser(email);
+    ResponseEntity<User> findOneUser(@RequestParam String email){
+        User user = service.findOneUser(email);
+        if(user==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<User>(user,HttpStatus.OK);
     }
 
     @PutMapping("/users") //update user password
@@ -79,8 +85,14 @@ public class GatewayController {
     }
 
     @PostMapping("/trips") //create a trip
-    void createOneTrip(@RequestBody NewTrip trip){
-        service.createOneTrip(trip);
+    ResponseEntity<Trip> createOneTrip(@RequestBody NewTrip trip){
+        System.out.println(trip);
+        Trip trip1 = service.createOneTrip(trip);
+        if(trip1==null) {
+            System.out.println("bad");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Trip>(trip1, HttpStatus.CREATED);
     }
 
     @GetMapping("/trips") //get list of trip with optional search queries
@@ -102,7 +114,7 @@ public class GatewayController {
     }
 
     @GetMapping("/trips/{id}/passengers") //get list of passenger of a trip (with status)
-    Iterable<Passenger> getAllPassengersStatus(@PathVariable int tripId){
+    Map<PassengerStatus, List<Passenger>> getAllPassengersStatus(@PathVariable int tripId){
         return service.getAllPassengersStatus(tripId);
     }
 
