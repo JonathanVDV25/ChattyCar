@@ -1,6 +1,7 @@
 package be.vinci.ipl.chattycar.gateway.data;
 
 import be.vinci.ipl.chattycar.gateway.models.NoIdPassenger;
+import be.vinci.ipl.chattycar.gateway.models.Passenger;
 import be.vinci.ipl.chattycar.gateway.models.Trip;
 import be.vinci.ipl.chattycar.gateway.models.User;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -39,7 +40,7 @@ public interface PassengersProxy {
   void deleteAllTripsFromUserWhereUserIsPassenger(@PathVariable int user_id);
 
   @GetMapping("/passengers/{trip_id}")
-  Iterable<User> getPassengersOfTrip(@PathVariable int trip_id);
+  Iterable<Passenger> getPassengersOfTrip(@PathVariable int trip_id);
 
   @DeleteMapping("/passengers/{trip_id}")
   void deleteAllPassengersOfTrip(@PathVariable int trip_id);
