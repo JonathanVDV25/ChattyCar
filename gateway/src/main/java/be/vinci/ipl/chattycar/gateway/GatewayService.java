@@ -90,7 +90,7 @@ public class GatewayService {
         return tripProxy.readAllTripsByDriver(id);
     }
 
-    public Iterable<User> getAllPassengerTrips(int id) {
+    public Iterable<Passenger> getAllPassengerTrips(int id) {
         return passengersProxy.getPassengersOfTrip(id);
     }
 
@@ -125,13 +125,8 @@ public class GatewayService {
         tripProxy.deleteOne(tripId);
     }
 
-    public void getAllPassengersStatus(int tripId) {
-        Iterable<User> users = passengersProxy.getPassengersOfTrip(tripId);
-        for (User user : users){
-            user.
-        }
-        Iterable<String> status;
-        return passengersProxy.getPassengersOfTrip()//TODO prendre uniquement status
+    public Iterable<Passenger> getAllPassengersStatus(int tripId) {
+        return passengersProxy.getPassengersOfTrip(tripId);
     }
 
     public NoIdPassenger addOnePassenger(int tripId, int userId) {

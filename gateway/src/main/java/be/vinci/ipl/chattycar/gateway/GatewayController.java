@@ -92,9 +92,9 @@ public class GatewayController {
         service.deleteOneTrip(tripId);
     }
 
-    @GetMapping("/trips/{trip_id}/passengers") //get list of passenger of a trip (with status)
-    void getAllPassengersStatus(@PathVariable int tripId){
-        service.getAllPassengersStatus(tripId); // TODO
+    @GetMapping("/trips/{id}/passengers") //get list of passenger of a trip (with status)
+    Iterable<Passenger> getAllPassengersStatus(@PathVariable int tripId){
+        return service.getAllPassengersStatus(tripId);
     }
 
     @PostMapping("/trips/{trip_id}/passengers/{user_id}") // add passenger to trip (with pending status)
