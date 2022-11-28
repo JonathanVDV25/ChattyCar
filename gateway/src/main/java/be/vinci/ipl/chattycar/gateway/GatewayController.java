@@ -12,7 +12,7 @@ import java.util.Map;
 @CrossOrigin(origins = { "http://localhost:53709/", "http://localhost" })
 @RestController
 public class GatewayController {
-    
+
     private final GatewayService service;
 
     public GatewayController(GatewayService service) {
