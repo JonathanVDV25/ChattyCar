@@ -7,6 +7,7 @@ import be.vinci.ipl.chattycar.gateway.data.*;
 
 import javax.management.Notification;
 import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class GatewayService {
@@ -90,8 +91,29 @@ public class GatewayService {
         return tripProxy.readAllTripsByDriver(id);
     }
 
-    public Iterable<Passenger> getAllPassengerTrips(int id) {
-        return passengersProxy.getPassengersOfTrip(id);
+    public Map<PassengerStatus, List<Trip>> getAllPassengerTrips(int id) {
+        // TODO il manque le status (comme clé)(GET /users/{id}/passenger)
+        Iterable<Trip> trips = passengersProxy.getTripsWhereUserIsPassenger(id);
+        Map<PassengerStatus, List<Trip>> status = new HashMap<PassengerStatus, List<Trip>>();
+
+        List<Trip> accepted = new ArrayList<>();
+        List<Trip> refused = new ArrayList<>();
+        List<Trip> pending = new ArrayList<>();
+
+        for(Trip trip : trips){
+            NoIdPassenger p = passengersProxy.getOnePassenger(trip.getId(), id);
+            if (p.getStatus().equals(PassengerStatus.ACCEPTED))
+                accepted.add(trip);
+            else if (p.getStatus().equals(PassengerStatus.REFUSED))
+                refused.add(trip);
+            else if (p.getStatus().equals(PassengerStatus.PENDING))
+                pending.add(trip);
+        }
+        status.put(PassengerStatus.ACCEPTED, accepted);
+        status.put(PassengerStatus.REFUSED, refused);
+        status.put(PassengerStatus.PENDING, pending);
+
+        return status;
     }
 
     public Iterable<Notification> getAllNotifs(int id) {
