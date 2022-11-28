@@ -1,5 +1,6 @@
-package be.vinci.ipl.chattycar.notification;
+package be.vinci.ipl.chattycar.notification.data;
 
+import be.vinci.ipl.chattycar.notification.models.Notification;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

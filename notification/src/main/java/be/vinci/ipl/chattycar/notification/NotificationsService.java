@@ -1,5 +1,7 @@
 package be.vinci.ipl.chattycar.notification;
 
+import be.vinci.ipl.chattycar.notification.data.NotificationsRepository;
+import be.vinci.ipl.chattycar.notification.models.Notification;
 import org.springframework.stereotype.Service;
 
 @Service
