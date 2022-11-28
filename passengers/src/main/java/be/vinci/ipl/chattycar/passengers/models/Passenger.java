@@ -1,5 +1,6 @@
 package be.vinci.ipl.chattycar.passengers.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,8 +23,10 @@ public class Passenger {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+  @JsonProperty("user_id")
   @Column(name = "user_id")
   private int userId;
+  @JsonProperty("trip_id")
   @Column(name = "trip_id")
   private int tripId;
   private String status;

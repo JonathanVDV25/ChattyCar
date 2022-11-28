@@ -1,5 +1,6 @@
 package be.vinci.ipl.chattycar.notification;
 
+import be.vinci.ipl.chattycar.notification.models.Notification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
