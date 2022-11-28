@@ -32,8 +32,8 @@ public class GatewayController {
     }
 
     @GetMapping("/users") //find user from email ex: /user?email=tom.aubry@gmail.com
-    void findOneUser(@RequestHeader("email") String email){
-        service.findOneUser(email);
+    User findOneUser(@RequestHeader("email") String email){
+        return service.findOneUser(email);
     }
 
     @PutMapping("/users") //update user password
