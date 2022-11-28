@@ -1,6 +1,7 @@
 package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -80,10 +81,12 @@ public class GatewayController {
         return service.createOneTrip(trip);
     }
     @GetMapping("/trips") //get list of trip with optional search queries
-    Iterable<Trip> searchAllTrips(@RequestHeader("departure_date") String depDate,
-                        @RequestHeader("originLat") double oLat, @RequestHeader("originLon") double oLon,
-                        @RequestHeader("destinationLat") double dLat, @RequestHeader("destinationLon") double dLon){
-        LocalDate dDate = LocalDate.parse(depDate); //TODO verif
+    Iterable<Trip> searchAllTrips(@RequestHeader(value = "departure_date", required = false)
+                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dDate,
+                                  @RequestHeader(value = "originLat", required = false) Double oLat,
+                                  @RequestHeader(value = "originLon", required = false) Double oLon,
+                                  @RequestHeader(value = "destinationLat", required = false) Double dLat,
+                                  @RequestHeader(value = "destinationLon", required = false) Double dLon){
         return service.searchAllTrips(dDate, oLat, oLon, dLat, dLon);
     }
     @GetMapping("/trips/{trip_id}") //get trip informations
@@ -96,8 +99,8 @@ public class GatewayController {
     }
 
     @GetMapping("/trips/{id}/passengers") //get list of passenger of a trip (with status)
-    Iterable<Passenger> getAllPassengersStatus(@PathVariable int tripId){
-        return service.getAllPassengersStatus(tripId);
+    Map<PassengerStatus, List<Passenger>> getAllPassengersStatus(@PathVariable int tripId){
+        return service.getAllPassengersStatus(tripId); // TODO
     }
 
     @PostMapping("/trips/{trip_id}/passengers/{user_id}") // add passenger to trip (with pending status)

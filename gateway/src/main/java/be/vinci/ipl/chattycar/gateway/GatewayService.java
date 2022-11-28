@@ -147,8 +147,27 @@ public class GatewayService {
         tripProxy.deleteOne(tripId);
     }
 
-    public Iterable<Passenger> getAllPassengersStatus(int tripId) {
-        return passengersProxy.getPassengersOfTrip(tripId);
+    public Map<PassengerStatus, List<Passenger>> getAllPassengersStatus(int tripId) {
+        Iterable<Passenger> passengers = passengersProxy.getPassengersOfTrip(tripId);
+        Map<PassengerStatus, List<Passenger>> status = new HashMap<>();
+
+        List<Passenger> accepted = new ArrayList<>();
+        List<Passenger> refused = new ArrayList<>();
+        List<Passenger> pending = new ArrayList<>();
+
+        for(Passenger p : passengers){
+            if (p.getStatus().equals(PassengerStatus.ACCEPTED))
+                accepted.add(p);
+            else if (p.getStatus().equals(PassengerStatus.REFUSED))
+                refused.add(p);
+            else if (p.getStatus().equals(PassengerStatus.PENDING))
+                pending.add(p);
+        }
+        status.put(PassengerStatus.ACCEPTED, accepted);
+        status.put(PassengerStatus.REFUSED, refused);
+        status.put(PassengerStatus.PENDING, pending);
+
+        return status;
     }
 
     public NoIdPassenger addOnePassenger(int tripId, int userId) {
