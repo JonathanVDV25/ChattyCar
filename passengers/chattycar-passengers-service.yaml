@@ -134,7 +134,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/passengers"
+                type: array
+                items:
+                  $ref: "#/components/schemas/passenger"
     delete:
       summary: Remove all passengers of a trip
       responses:
@@ -157,30 +159,44 @@ components:
         latitude: 50.849372
         longitude: 4.451009
 
-    passengers:
-      type: object
-      properties:
-        passengers:
-          type: array
-          items:
-            $ref: '#/components/schemas/passenger'
-
     passenger:
       type: object
       properties:
         id:
           type: integer
-        email:
-          type: string
         firstname:
           type: string
         lastname:
           type: string
+        status:
+          type: string
+          enum:
+            - pending
+            - accepted
+            - refused
       example:
         id: 1
-        email: gregory.seront@vinci.be
         firstname: Gregory
         lastname: Seront
+        status: accepted
+
+    NoIdPassenger:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        status:
+          type: string
+          enum:
+            - pending
+            - accepted
+            - refused
+      example:
+        firstname: Gregory
+        lastname: Seront
+        status: accepted
 
     trip:
       type: object
