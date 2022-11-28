@@ -80,7 +80,7 @@ public class GatewayService {
         passengersProxy.deleteAllTripsFromUserWhereUserIsPassenger(id);
 
         // REMOVE THIS USER
-        //usersProxy.//TODO deleteOneUser pas present dans usersProxy
+        usersProxy.deleteOne(id);
 
         // REMOVE AUTH
         authenticationProxy.deleteCredentials(usersProxy.readOneById(id).getEmail());
