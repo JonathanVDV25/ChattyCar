@@ -5,92 +5,99 @@ info:
 servers:
   - url: 'https://localhost:9005/'
     description: Notifications service
-components:
-  schemas:
-    notification:
-      type: object
-      properties:
-        id_notification:
-          type: integer
-        id_user:
-          type: integer
-        id_trip:
-          type: integer
-        is_on:
-          type: boolean
-      example:
-        id_notification: 1
-        id_user: 1
-        id_trip: 2
-        is_on : false
 
 paths:
   /notifications:
     post:
-      summary: create a notification for a user
+      summary: Create a notification for a user
       requestBody:
-        description: id_user and id_trip
+        description: Notification to create
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/notification'
+              $ref: '#/components/schemas/newNotification'
       responses:
         409:
-          description: user is already added to the trip
+          description: User is already added to the trip
         201:
-          description: notification added to the user
+          description: Notification added to the user
 
-  /notifications/{id_user}:
+  /notifications/{user_id}:
     get:
+      summary: Get notifications for this user
       parameters:
-        - name: id_user
+        - name: user_id
           in: path
-          description: id of a user
           required: true
           schema:
             type: integer
             example: 1
-          style: simple
-      summary: get notification for this user
+          description: ID of the user
       responses:
         404:
-          description: no notification found
+          description: Notification not found
         200:
-          description: find notifications for the trips of this users
+          description: Notifications found
           content:
             'application/json':
               schema:
                 $ref: "#/components/schemas/notification"
     delete:
+      summary: Delete a user's notifications
       parameters:
-          - name: id_user
+          - name: user_id
             in: path
-            description: id of a user
             required: true
             schema:
               type: integer
               example: 1
-            style: simple
-      summary: delete a user's notification
+            description: ID of the user
       responses:
         404:
-          description: notification does not exist
+          description: Notification not found
         200:
-          description: delete all the notification associated to user
+          description: All notifications of user deleted
 
-  /notifications/{id_trip}:
+  /notifications/{trip_id}:
     delete:
+      summary: Delete notifications associated to a trip
       parameters:
-        - name: id_trip
-          description: id of a trip
+        - name: trip_id
+          in: path
           required: true
           schema:
             type: integer
             example: 2
-          style: simple
-      summary: delete notifications associated to a trip
+          description: ID of the trip
       responses:
         404:
-          description: notification does not exist
+          description: Notification not found
         200:
-          description: delete all the notifications associated to trip
+          description: All notifications associated to a trip deleted
+
+components:
+  schemas:
+    notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        id_user:
+          type: integer
+        id_trip:
+          type: integer
+      example:
+        id: 1
+        id_user: 1
+        id_trip: 2
+
+    newNotification:
+      type: object
+      properties:
+        id_user:
+          type: integer
+        id_trip:
+          type: integer
+      example:
+        id_user: 1
+        id_trip: 2

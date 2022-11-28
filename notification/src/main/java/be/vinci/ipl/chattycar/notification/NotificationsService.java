@@ -1,6 +1,7 @@
 package be.vinci.ipl.chattycar.notification;
 
 import be.vinci.ipl.chattycar.notification.data.NotificationsRepository;
+import be.vinci.ipl.chattycar.notification.models.NoIdNotification;
 import be.vinci.ipl.chattycar.notification.models.Notification;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +16,14 @@ public class NotificationsService {
 
     /**
      * Create a notification to a user
-     * @param  notification to create
-     * @return true if the notification could be created, false if it already exists
+     * @param  noIdNotification notification to create
+     * @return created notification
      */
-    public boolean createNotificationToUser(Notification notification) {
-        if(repository.existsByUserIdAndTripId(notification.getUserId(), notification.getTripId())){
-            return false;
+    public Notification createOne(NoIdNotification noIdNotification) {
+        if(repository.existsByUserIdAndTripId(noIdNotification.getUserId(), noIdNotification.getTripId())){
+            return null;
         }
-        repository.save(new Notification(notification.getUserId(), notification.getTripId()));
-        return true;
+        return repository.save(noIdNotification.toNotification());
     }
 
     /**
