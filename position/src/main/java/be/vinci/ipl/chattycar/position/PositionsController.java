@@ -14,13 +14,14 @@ public class PositionsController {
     this.service = service;
   }
 
-  @GetMapping("/distance/{originLatitude}/{originLongitude}/{destinationLatitude}/{destinationLongitude}")
-  public double getDistance(@PathVariable double originLatitude, @PathVariable double originLongitude,
-      @PathVariable double destinationLatitude, @PathVariable double destinationLongitude) {
+  @GetMapping("/distance/{origin_latitude}/{origin_longitude}/{destination_latitude}/{destination_longitude}")
+  public double getDistance(@PathVariable("origin_latitude") double originLatitude,
+      @PathVariable("origin_longitude") double originLongitude,
+      @PathVariable("destination_latitude") double destinationLatitude,
+      @PathVariable("destination_longitude") double destinationLongitude) {
     if (originLatitude == 0 || originLongitude == 0 || destinationLatitude == 0 || destinationLongitude == 0) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
-    double distance = service.getDistance(originLatitude, originLongitude, destinationLatitude, destinationLongitude);
-    return distance;
+    return service.getDistance(originLatitude, originLongitude, destinationLatitude, destinationLongitude);
   }
 }

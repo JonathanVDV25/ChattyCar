@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: ChattyCar notification service
+  version: 1.0.0
+servers:
+  - url: 'https://localhost:9005/'
+    description: Notifications service
+
+paths:
+  /notifications:
+    post:
+      summary: Create a notification for a user
+      requestBody:
+        description: Notification to create
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/newNotification'
+      responses:
+        409:
+          description: User is already added to the trip
+        201:
+          description: Notification added to the user
+
+  /notifications/{user_id}:
+    get:
+      summary: Get notifications for this user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+          description: ID of the user
+      responses:
+        404:
+          description: Notification not found
+        200:
+          description: Notifications found
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/notification"
+    delete:
+      summary: Delete a user's notifications
+      parameters:
+          - name: user_id
+            in: path
+            required: true
+            schema:
+              type: integer
+              example: 1
+            description: ID of the user
+      responses:
+        404:
+          description: Notification not found
+        200:
+          description: All notifications of user deleted
+
+  /notifications/{trip_id}:
+    delete:
+      summary: Delete notifications associated to a trip
+      parameters:
+        - name: trip_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 2
+          description: ID of the trip
+      responses:
+        404:
+          description: Notification not found
+        200:
+          description: All notifications associated to a trip deleted
+
+components:
+  schemas:
+    notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        id_user:
+          type: integer
+        id_trip:
+          type: integer
+      example:
+        id: 1
+        id_user: 1
+        id_trip: 2
+
+    newNotification:
+      type: object
+      properties:
+        id_user:
+          type: integer
+        id_trip:
+          type: integer
+      example:
+        id_user: 1
+        id_trip: 2

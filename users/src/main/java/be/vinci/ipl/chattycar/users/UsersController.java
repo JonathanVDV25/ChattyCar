@@ -31,16 +31,16 @@ public class UsersController {
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
   }
 
-  @GetMapping("/users/{id}")
-  public User readOneById(@PathVariable int id) {
-    User user = service.readOneById(id);
+  @GetMapping("/users/{user_id}")
+  public User readOneById(@PathVariable("user_id") int userId) {
+    User user = service.readOneById(userId);
     if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     return user;
   }
 
-  @PutMapping("/users/{id}")
-  public void updateOne(@PathVariable int id, @RequestBody User user) {
-    if (user.getId() != id || user.getEmail() == null ||
+  @PutMapping("/users/{user_id}")
+  public void updateOne(@PathVariable("user_id") int userId, @RequestBody User user) {
+    if (user.getId() != userId || user.getEmail() == null ||
         user.getLastname() == null || user.getFirstname() == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
@@ -48,9 +48,9 @@ public class UsersController {
     if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
   }
 
-  @DeleteMapping("/users/{id}")
-  public void deleteOne(@PathVariable int id) {
-    boolean found = service.deleteOne(id);
+  @DeleteMapping("/users/{user_id}")
+  public void deleteOne(@PathVariable("user_id") int userId) {
+    boolean found = service.deleteOne(userId);
     if (!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
   }
 

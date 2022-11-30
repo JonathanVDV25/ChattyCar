@@ -15,16 +15,16 @@ public class GatewayService {
     private final AuthenticationProxy authenticationProxy;
     private final UsersProxy usersProxy;
     private final TripProxy tripProxy;
-    private final NotificationProxy notificationProxy;
+    private final NotificationsProxy notificationsProxy;
     private final PassengersProxy passengersProxy;
 
     public GatewayService(AuthenticationProxy authenticationProxy, UsersProxy usersProxy,
-                          TripProxy tripProxy, NotificationProxy notificationProxy,
+                          TripProxy tripProxy, NotificationsProxy notificationsProxy,
                           PassengersProxy passengersProxy) {
         this.authenticationProxy = authenticationProxy;
         this.usersProxy = usersProxy;
         this.tripProxy = tripProxy;
-        this.notificationProxy = notificationProxy;
+        this.notificationsProxy = notificationsProxy;
         this.passengersProxy = passengersProxy;
     }
 
@@ -47,7 +47,7 @@ public class GatewayService {
 
     public void updateOneUserPassword(Credentials credentials) {
         User user = findOneUser(credentials.getEmail());
-        authenticationProxy.createCredentials(user.getEmail(), credentials);
+        authenticationProxy.updateCredentials(user.getEmail(), credentials);
     }
 
     public User getOneUserInfo(int id) {
@@ -62,11 +62,11 @@ public class GatewayService {
         Iterable<Trip> driverTrips = tripProxy.readAllTripsByDriver(id);
 
         // REMOVE NOTIF OF THIS USER
-        notificationProxy.removeNotificationOfAUser(id);
+        notificationsProxy.removeNotificationOfAUser(id);
 
         // REMOVE NOTIF OTHERS RECEIVE FROM THIS DRIVER
         for (Trip trip: driverTrips){
-            notificationProxy.removeNotificationOfATrip(trip.getId());
+            notificationsProxy.removeNotificationOfATrip(trip.getId());
         }
 
         // REMOVE PASSENGERS OF THIS DRIVER
@@ -91,6 +91,9 @@ public class GatewayService {
         return tripProxy.readAllTripsByDriver(id);
     }
 
+    public Iterable<Trip> getALlTripsUser(int id) {
+        return passengersProxy.getTripsWhereUserIsPassenger(id);
+    }
     public Map<PassengerStatus, List<Trip>> getAllPassengerTrips(int id) {
         // TODO il manque le status (comme clé)(GET /users/{id}/passenger)
         Iterable<Trip> trips = passengersProxy.getTripsWhereUserIsPassenger(id);
@@ -117,18 +120,18 @@ public class GatewayService {
     }
 
     public Iterable<Notification> getAllNotifs(int id) {
-        return notificationProxy.getNotification(id);
+        return notificationsProxy.getNotification(id);
     }
 
     public void deleteAllNotifs(int id) {
-        notificationProxy.removeNotificationOfAUser(id);
+        notificationsProxy.removeNotificationOfAUser(id);
     }
 
     public Trip createOneTrip(NewTrip trip) {
         return tripProxy.createOne(trip);
     }
 
-    public Iterable<Trip> searchAllTrips(LocalDate dDate, double oLat, double oLon, double dLat, double dLon) {
+    public Iterable<Trip> searchAllTrips(LocalDate dDate, Double oLat, Double oLon, Double dLat, Double dLon) {
         return tripProxy.readAll(dDate, oLat, oLon, dLat, dLon);
     }
 
@@ -138,7 +141,7 @@ public class GatewayService {
 
     public void deleteOneTrip(int tripId) {
         //DELETE NOTIFICATIONS
-        notificationProxy.removeNotificationOfATrip(tripId);
+        notificationsProxy.removeNotificationOfATrip(tripId);
 
         //DELETE PASSENGERS
         passengersProxy.deleteAllPassengersOfTrip(tripId);
@@ -156,12 +159,18 @@ public class GatewayService {
         List<Passenger> pending = new ArrayList<>();
 
         for(Passenger p : passengers){
-            if (p.getStatus().equals(PassengerStatus.ACCEPTED))
+            System.out.println(p);
+            if (p.getStatus().toUpperCase().equals(PassengerStatus.ACCEPTED.toString())){
                 accepted.add(p);
-            else if (p.getStatus().equals(PassengerStatus.REFUSED))
+            }
+            else if (p.getStatus().toUpperCase().equals(PassengerStatus.REFUSED.toString())){
                 refused.add(p);
-            else if (p.getStatus().equals(PassengerStatus.PENDING))
+            }
+            else if (p.getStatus().toUpperCase().equals(PassengerStatus.PENDING.toString())){
                 pending.add(p);
+            }
+
+
         }
         status.put(PassengerStatus.ACCEPTED, accepted);
         status.put(PassengerStatus.REFUSED, refused);
@@ -185,5 +194,9 @@ public class GatewayService {
     public void deleteOnePassenger(int tripId, int userId) {
         // REMOVE PASSENGER
         passengersProxy.deleteOnePassenger(tripId, userId);
+    }
+
+    public Iterable<Passenger> listPassengers(int tripId){
+        return passengersProxy.getPassengersOfTrip(tripId);
     }
 }

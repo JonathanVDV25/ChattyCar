@@ -1,4 +1,4 @@
-package be.vinci.ipl.chattycar.notification;
+package be.vinci.ipl.chattycar.notifications;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

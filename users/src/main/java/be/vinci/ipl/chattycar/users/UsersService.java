@@ -16,7 +16,7 @@ public class UsersService {
   /**
    * Creates a user
    * @param noIdUser User to create without id
-   * @return true if the user could be created, false if another user exists with this id
+   * @return created user
    */
   public User createOne(NoIdUser noIdUser) {
     if (repository.findByEmail(noIdUser.getEmail()) != null) return null;

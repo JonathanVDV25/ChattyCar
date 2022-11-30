@@ -1,4 +1,4 @@
-package be.vinci.ipl.chattycar.notification;
+package be.vinci.ipl.chattycar.notifications;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

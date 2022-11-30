@@ -2,7 +2,6 @@ package be.vinci.ipl.chattycar.passengers;
 
 import be.vinci.ipl.chattycar.passengers.models.Passenger;
 import be.vinci.ipl.chattycar.passengers.models.Trip;
-import be.vinci.ipl.chattycar.passengers.models.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,23 +73,23 @@ public class PassengersController {
   }
 
   @GetMapping("/passengers/users/{user_id}")
-  public Iterable<Trip> getTripsWhereUserIsPassenger(@PathVariable int user_id) {
-    return service.getTripsWhereUserIsPassenger(user_id);
+  public Iterable<Trip> getTripsWhereUserIsPassenger(@PathVariable("user_id") int userId) {
+    return service.getTripsWhereUserIsPassenger(userId);
   }
 
   @DeleteMapping("/passengers/users/{user_id}")
-  public void deleteAllTripsFromUserWhereUserIsPassenger(@PathVariable int user_id) {
-    service.deleteAllTripsFromUserWhereUserIsPassenger(user_id);
+  public void deleteAllTripsFromUserWhereUserIsPassenger(@PathVariable("user_id") int userId) {
+    service.deleteAllTripsFromUserWhereUserIsPassenger(userId);
   }
 
   @GetMapping("/passengers/{trip_id}")
-  public Iterable<Passenger> getPassengersOfTrip(@PathVariable int trip_id) {
-    return service.getPassengersOfTrip(trip_id);
+  public Iterable<Passenger> getPassengersOfTrip(@PathVariable("trip_id") int tripId) {
+    return service.getPassengersOfTrip(tripId);
   }
 
   @DeleteMapping("/passengers/{trip_id}")
-  public void deleteAllPassengersOfTrip(@PathVariable int trip_id) {
-    service.deleteAllPassengersOfTrip(trip_id);
+  public void deleteAllPassengersOfTrip(@PathVariable("trip_id") int tripId) {
+    service.deleteAllPassengersOfTrip(tripId);
   }
 
 }

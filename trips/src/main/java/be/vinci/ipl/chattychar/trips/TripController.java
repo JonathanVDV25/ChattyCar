@@ -36,9 +36,11 @@ public class TripController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     if ((destinationLat != null && destinationLon == null) || (destinationLat == null && destinationLon != null))
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-    if (originLat != null && originLon != null)
+    // No need to verify originLon -> above verified if originLat & originLon != null
+    if (originLat != null)
       return service.readByOriginPosition(originLat, originLon);
-    if (destinationLat != null && destinationLon != null)
+    // Same as above
+    if (destinationLat != null)
       return service.readByDestinationPosition(destinationLat, destinationLon);
     return service.readAll();
   }

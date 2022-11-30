@@ -8,9 +8,9 @@ import javax.management.Notification;
 
 @Repository
 @FeignClient(name = "notifications")
-public interface NotificationProxy {
+public interface NotificationsProxy {
 
-    @PostMapping("/notifications/{id_user}/{id_trips}")
+    @PostMapping("/notifications")
     void createNotification(@RequestBody Notification notification);
 
     @GetMapping("/notifications/{id_user}")

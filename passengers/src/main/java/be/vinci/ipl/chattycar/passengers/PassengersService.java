@@ -4,9 +4,7 @@ import be.vinci.ipl.chattycar.passengers.data.PassengersRepository;
 import be.vinci.ipl.chattycar.passengers.models.NoIdPassenger;
 import be.vinci.ipl.chattycar.passengers.models.Passenger;
 import be.vinci.ipl.chattycar.passengers.data.TripsProxy;
-import be.vinci.ipl.chattycar.passengers.data.UsersProxy;
 import be.vinci.ipl.chattycar.passengers.models.Trip;
-import be.vinci.ipl.chattycar.passengers.models.User;
 import java.util.stream.StreamSupport;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +13,10 @@ public class PassengersService {
 
   private final PassengersRepository repository;
   private final TripsProxy tripsProxy;
-  private final UsersProxy usersProxy;
-
-  public PassengersService(PassengersRepository repository, TripsProxy tripsProxy,
-      UsersProxy usersProxy) {
+  public PassengersService(PassengersRepository repository, TripsProxy tripsProxy
+      ) {
     this.repository = repository;
     this.tripsProxy = tripsProxy;
-    this.usersProxy = usersProxy;
   }
 
   public Iterable<Trip> getTripsWhereUserIsPassenger(int userId) {

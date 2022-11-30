@@ -1,5 +1,5 @@
 ### Create notification
-POST http://localhost:9005/notifications/1/2
+POST http://localhost:9005/notifications
 Content-Type: application/json
 
 {

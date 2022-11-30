@@ -7,37 +7,36 @@ servers:
   - url: 'http://localhost:9006'
     description: Development server
 paths:
-  /distance/{originLatitude}/{originLongitude}/{destinationLatitude}/{destinationLongitude}:
+  /distance/{origin_latitude}/{origin_longitude}/{destination_latitude}/{destination_longitude}:
     parameters:
-      - name: originLatitude
+      - name: origin_latitude
         in: path
         required: true
-        description: originLatitude of the trip
+        description: origin latitude of the trip
         schema:
           type: number
           example: 50.4.451009
-      - name: originLongitude
+      - name: origin_longitude
         in: path
         required: true
         description: origin longitude of the trip
         schema:
           type: number
           example: 47.4.451009
-      - name: destinationLatitude
+      - name: destination_latitude
         in: path
         required: true
         description: destination latitude of the trip
         schema:
           type: number
           example: 50.4.451009
-      - name: destinationLongitude
+      - name: destination_longitude
         in: path
         required: true
         description: destination longitude of the trip
         schema:
           type: number
           example: 47.4.451009
-
     get:
       summary: Compute the distance between two positions
       responses:

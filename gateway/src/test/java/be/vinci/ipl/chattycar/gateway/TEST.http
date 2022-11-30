@@ -1,0 +1,107 @@
+### créer une compte a
+
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "email" : "a@a.com",
+  "firstname" : "aa",
+  "lastname" : "bb",
+  "password" : "a"
+}
+
+#### créer une compte b
+
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "email" : "b@a.com",
+  "firstname" : "aa",
+  "lastname" : "bb",
+  "password" : "a"
+}
+
+### connecter avec compte a
+
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "email": "a@a.com",
+  "password": "a"
+}
+
+> {%client.global.set("token", response.body)%}
+
+### change le prenom du compte a
+
+PUT http://localhost:8080/users
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "email" : "a@a.com",
+  "password": "aa"
+}
+
+### info du compte a
+
+GET http://localhost:8080/users/4
+Authorization: {{token}}
+
+### list de trip dans laquelle le user est le conducteur
+
+GET http://localhost:8080/users/1/driver
+Authorization: {{token}}
+
+### list de trips dans laquel le user est le passager
+
+GET http://localhost:8080/users/1/passenger
+Authorization: {{token}}
+
+### get notif pour user
+
+GET http://localhost:8080/users/1/notifications
+Authorization: {{token}}
+
+### status de passager
+
+GET http://localhost:8080/trips/2/passengers/3
+Authorization: {{token}}
+
+### changer le statut de passager
+
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "email": "gregory.seront@vinci.be",
+  "password": "notsaying"
+}
+
+> {%client.global.set("token", response.body)%}
+
+### changer le status de passager
+
+PUT http://localhost:8080/trips/2/passengers/3
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "user_id": 3,
+  "trip_id": 2,
+  "status" : "ACCEPTED"
+}
+
+### effacer un passager dans un trip
+
+DELETE http://localhost:8080/trips/4/passengers/3
+Authorization:{{token}}
+
+
+### effacer un trip
+
+DELETE http://localhost:8080/trips/1
+Authorization: {{token}}
+
