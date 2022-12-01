@@ -2,7 +2,6 @@ package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.*;
 import java.util.stream.StreamSupport;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import be.vinci.ipl.chattycar.gateway.data.*;
@@ -121,11 +120,6 @@ public class GatewayService {
         System.out.println(trips);
         return StreamSupport.stream(trips.spliterator(), false)
             .filter(trip -> trip.getDepartureDate().isAfter(LocalDate.now())).toList();
-    }
-
-    public Iterable<Trip> getALlTripsUser(int id) {
-        return passengersProxy.getTripsWhereUserIsPassenger(id);
-        // TODO delete useless method
     }
 
     public Map<String, Iterable<Trip>> getAllPassengerTrips(int userId) {
@@ -324,15 +318,18 @@ public class GatewayService {
         NoIdPassenger passenger = passengersProxy.getOnePassenger(tripId, userId);
         passenger.setStatus(newStatus);
         passengersProxy.updateOnePassenger(tripId, userId, passenger);
+
+        notificationsProxy.createNotification(new NoIdNotification(userId, tripId)); // add notif
     }
 
     public void deleteOnePassenger(int tripId, int userId) {
+        // REMOVE NOTIF
+        try {
+            notificationsProxy.removeNotificationOfTripOfUser(tripId, userId);
+        } catch (ResponseStatusException ignore) {} // ignore not found
+
         // REMOVE PASSENGER
         passengersProxy.deleteOnePassenger(tripId, userId);
-    }
-
-    public Iterable<Passenger> listPassengers(int tripId){
-        return passengersProxy.getPassengersOfTrip(tripId);
     }
 
     public NoIdPassenger getPassenger(int tripId, int userId) {

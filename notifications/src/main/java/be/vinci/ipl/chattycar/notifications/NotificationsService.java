@@ -64,4 +64,11 @@ public class NotificationsService {
         return true;
     }
 
+    public boolean deleteNotificationOfTripOfUser(int tripId, int userId) {
+        if (!repository.existsByUserIdAndTripId(userId, tripId))
+            return false;
+        repository.deleteByTripIdAndAndUserId(tripId, userId);
+        return true;
+    }
+
 }

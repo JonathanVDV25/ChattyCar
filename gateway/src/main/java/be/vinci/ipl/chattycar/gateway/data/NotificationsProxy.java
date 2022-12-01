@@ -21,4 +21,8 @@ public interface NotificationsProxy {
 
     @DeleteMapping("/notifications/trips/{id_trip}")
     void removeNotificationOfATrip(@PathVariable int id_trip);
+
+    @DeleteMapping("/notifications/trips/{trip_id}/users/{user_id}")
+    void removeNotificationOfTripOfUser(@PathVariable(name = "trip_id") int tripId,
+        @PathVariable(name = "user_id") int userId);
 }

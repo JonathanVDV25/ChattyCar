@@ -21,4 +21,6 @@ public interface NotificationsRepository extends CrudRepository<Notification, In
     @Transactional
     void deleteAllByTripId(int id_trip);
 
+    void deleteByTripIdAndAndUserId(int tripId, int userId);
+
 }

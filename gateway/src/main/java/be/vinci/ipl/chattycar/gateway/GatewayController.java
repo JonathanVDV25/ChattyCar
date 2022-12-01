@@ -211,14 +211,21 @@ public class GatewayController {
         service.updateOnePassengerStatus(tripId, userId, newStatus);
     }
 
-    // ok
     @DeleteMapping("/trips/{trip_id}/passengers/{user_id}") // remove passenger from trip
-    void deleteOnePassenger(@PathVariable int trip_id, @PathVariable int user_id, @RequestHeader("Authorization") String token){
-        String email = service.verify(token);
-        Trip trip = service.getOneTripInformations(trip_id);
-        User user = service.getOneUserInfo(trip.getDriverId());
-        if (trip.getDriverId()!=user.getId())
+    void deleteOnePassenger(@PathVariable(name = "trip_id") int tripId, @PathVariable(name = "user_id") int userId,
+        @RequestHeader("Authorization") String token) {
+        String email = service.verify(token); // 401
+        User user = service.getOneUserInfo(userId); // 404
+        service.getOneTripInformations(tripId); // 404
+        try {
+            service.getPassenger(tripId, userId);
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatus().value() == 404)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        if (!email.equals(user.getEmail()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
-        service.deleteOnePassenger(trip_id, user_id);
+        service.deleteOnePassenger(tripId, userId);
     }
 }
