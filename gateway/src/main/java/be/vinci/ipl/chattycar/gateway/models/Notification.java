@@ -2,6 +2,7 @@ package be.vinci.ipl.chattycar.gateway.models;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +22,8 @@ public class Notification {
     @JsonProperty("trip_id")
     private int tripId;
 
-    public Notification(int userId, int tripId){
-        this.userId = userId;
-        this.tripId = tripId;
-    }
+    private LocalDate date;
+
+    @JsonProperty("notification_text")
+    private String notificationText;
 }

@@ -21,8 +21,8 @@ public class GatewayService {
     private final PositionProxy positionProxy;
 
     public GatewayService(AuthenticationProxy authenticationProxy, UsersProxy usersProxy,
-                          TripProxy tripProxy, NotificationsProxy notificationsProxy,
-                          PassengersProxy passengersProxy, PositionProxy positionProxy) {
+        TripProxy tripProxy, NotificationsProxy notificationsProxy,
+        PassengersProxy passengersProxy, PositionProxy positionProxy) {
         this.authenticationProxy = authenticationProxy;
         this.usersProxy = usersProxy;
         this.tripProxy = tripProxy;
@@ -298,7 +298,7 @@ public class GatewayService {
     public NoIdPassenger addOnePassenger(Trip trip, int userId) {
         long count = StreamSupport.stream(passengersProxy.getPassengersOfTrip(trip.getId()).spliterator(), false)
             .filter(passenger -> passenger.getStatus().equalsIgnoreCase(
-                    PassengerStatus.ACCEPTED.toString().toLowerCase()))
+                PassengerStatus.ACCEPTED.toString().toLowerCase()))
             .count();
         if (count >= trip.getAvailableSeating())
             return null;
@@ -311,7 +311,7 @@ public class GatewayService {
                 return null;
         }
 
-        notificationsProxy.createNotification(new NoIdNotification(trip.getDriverId(), trip.getId()));
+        notificationsProxy.createNotification(new NoIdNotification(trip.getDriverId(), trip.getId(), LocalDate.now(), "Membre " + userId + "veut rejoindre le voyage " + trip.getId()));
         return passenger;
     }
 
@@ -324,7 +324,7 @@ public class GatewayService {
         passenger.setStatus(newStatus);
         passengersProxy.updateOnePassenger(tripId, userId, passenger);
 
-        notificationsProxy.createNotification(new NoIdNotification(userId, tripId)); // add notif
+        notificationsProxy.createNotification(new NoIdNotification(userId, tripId, LocalDate.now(), "Votre demande de voyage " + tripId + " est " + newStatus)); // add notif
     }
 
     public void deleteOnePassenger(int tripId, int userId) {
