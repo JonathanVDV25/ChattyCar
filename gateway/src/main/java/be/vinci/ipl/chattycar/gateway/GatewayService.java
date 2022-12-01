@@ -124,6 +124,7 @@ public class GatewayService {
 
     public Iterable<Trip> getALlTripsUser(int id) {
         return passengersProxy.getTripsWhereUserIsPassenger(id);
+        // TODO delete useless method
     }
     public Map<String, Iterable<Trip>> getAllPassengerTrips(int userId) {
         Iterable<Trip> trips = passengersProxy.getTripsWhereUserIsPassenger(userId);
@@ -247,42 +248,50 @@ public class GatewayService {
 
     public void deleteOneTrip(int tripId) {
         //DELETE NOTIFICATIONS
-        notificationsProxy.removeNotificationOfATrip(tripId);
+        try {
+            notificationsProxy.removeNotificationOfATrip(tripId);
+        } catch (ResponseStatusException ignored) {} // Not found ignored
 
         //DELETE PASSENGERS
         passengersProxy.deleteAllPassengersOfTrip(tripId);
+        // TODO should have a try catch. deleteAllPassengersOfTrip should send a no found error
+        // TODO istead of an empty array !!
 
         //DELETE TRIP
         tripProxy.deleteOne(tripId);
     }
 
-    public Map<PassengerStatus, List<Passenger>> getAllPassengersStatus(int tripId) {
+    public Map<String, Iterable<User>> getAllPassengersStatus(int tripId) {
         Iterable<Passenger> passengers = passengersProxy.getPassengersOfTrip(tripId);
-        Map<PassengerStatus, List<Passenger>> status = new HashMap<>();
+        Map<String, Iterable<User>> usersTripStatus = new HashMap<>();
 
-        List<Passenger> accepted = new ArrayList<>();
-        List<Passenger> refused = new ArrayList<>();
-        List<Passenger> pending = new ArrayList<>();
+        List<User> accepted = new ArrayList<>();
+        List<User> refused = new ArrayList<>();
+        List<User> pending = new ArrayList<>();
 
         for(Passenger p : passengers){
+            User user = usersProxy.readOneById(p.getUserId());
             System.out.println(p);
             if (p.getStatus().toUpperCase().equals(PassengerStatus.ACCEPTED.toString())){
-                accepted.add(p);
+                accepted.add(user);
             }
             else if (p.getStatus().toUpperCase().equals(PassengerStatus.REFUSED.toString())){
-                refused.add(p);
+                refused.add(user);
             }
             else if (p.getStatus().toUpperCase().equals(PassengerStatus.PENDING.toString())){
-                pending.add(p);
+                pending.add(user);
+            } else {
+                // Status not in accepted values [accepted, refused, pending]
+                return null;
             }
 
 
         }
-        status.put(PassengerStatus.ACCEPTED, accepted);
-        status.put(PassengerStatus.REFUSED, refused);
-        status.put(PassengerStatus.PENDING, pending);
+        usersTripStatus.put(PassengerStatus.ACCEPTED.toString().toLowerCase(), accepted);
+        usersTripStatus.put(PassengerStatus.REFUSED.toString().toLowerCase(), refused);
+        usersTripStatus.put(PassengerStatus.PENDING.toString().toLowerCase(), pending);
 
-        return status;
+        return usersTripStatus;
     }
 
     public NoIdPassenger addOnePassenger(int tripId, int userId) {

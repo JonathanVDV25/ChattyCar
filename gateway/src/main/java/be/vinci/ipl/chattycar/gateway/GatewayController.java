@@ -135,37 +135,32 @@ public class GatewayController {
         return service.searchAllTrips(depDate, oLat, oLon, dLat, dLon); // 400 || 200
     }
 
-    // OK
     @GetMapping("/trips/{trip_id}") //get trip informations
-    void getOneTripInformations(@PathVariable int trip_id){
-
-        service.getOneTripInformations(trip_id);
+    Trip getOneTripInformations(@PathVariable int trip_id){
+        return service.getOneTripInformations(trip_id);
     }
 
-    // return code 401 & 403 missing -- pas testé
     @DeleteMapping("/trips/{tripId}") //delete trip
-    void deleteOneTrip(@PathVariable int tripId, @RequestHeader("Authorization") String token){
-        System.out.println("in");
-        String email = service.verify(token);
-        Trip trip = service.getOneTripInformations(tripId);
-        User user = service.findOneUser(email);
+    void deleteOneTrip(@PathVariable int tripId, @RequestHeader("Authorization") String token) {
+        String email = service.verify(token); // 401
+        Trip trip = service.getOneTripInformations(tripId); // 404
+        User user = service.findOneUser(email); // never 404
         if (trip.getDriverId()!=user.getId())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
         service.deleteOneTrip(tripId);
     }
 
-    // OK mais il faut verifier la verification
-    @GetMapping("/trips/{tripId}/passengers") //get list of passenger of a trip (with status)
-   Map<PassengerStatus, List<Passenger>> getAllPassengersStatus(@PathVariable int tripId){//, @RequestHeader("Authorization") String token){
-//        System.out.println("in");
-//        String email = service.verify(token);
-//        System.out.println(token);
-        Trip trip = service.getOneTripInformations(tripId);
+    @GetMapping("/trips/{id}/passengers") //get list of passenger of a trip (with status)
+    Map<String, Iterable<User>> getAllPassengersStatus(@PathVariable int id, @RequestHeader("Authorization") String token){
+        String email = service.verify(token); // 401
+        Trip trip = service.getOneTripInformations(id); // 404
         User user = service.getOneUserInfo(trip.getDriverId());
-//        if (!email.equals(user.getEmail()))
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
-        return service.getAllPassengersStatus(tripId);
-
+        if (!email.equals(user.getEmail()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
+        Map<String, Iterable<User>> result = service.getAllPassengersStatus(id);
+        if (result == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST); //400
+        return result;
     }
 
     // OK

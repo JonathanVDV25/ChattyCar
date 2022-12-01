@@ -277,6 +277,22 @@ GET http://localhost:8080/trips?originLat=50&originLon=89
 GET http://localhost:8080/trips?destinationLat=50&destinationLon=89
 
 
+### Get one trip info
+GET http://localhost:8080/trips/1
+
+### get one unknown trip -> Error 404
+GET http://localhost:8080/trips/500
+
+### Delete a trip
+DELETE http://localhost:8080/trips/1
+Authorization: {{jonathanToken}}
+
+
+### Get all passengers status
+GET http://localhost:8080/trips/2/passengers
+Authorization: {{jonathanToken}}
+
+
 
 
 
