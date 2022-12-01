@@ -2,7 +2,6 @@ package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.*;
 import java.util.stream.StreamSupport;
-import org.apache.logging.log4j.util.PropertySource;
 import org.springframework.stereotype.Service;
 
 import be.vinci.ipl.chattycar.gateway.data.*;
@@ -19,15 +18,17 @@ public class GatewayService {
     private final TripProxy tripProxy;
     private final NotificationsProxy notificationsProxy;
     private final PassengersProxy passengersProxy;
+    private final PositionProxy positionProxy;
 
     public GatewayService(AuthenticationProxy authenticationProxy, UsersProxy usersProxy,
                           TripProxy tripProxy, NotificationsProxy notificationsProxy,
-                          PassengersProxy passengersProxy) {
+                          PassengersProxy passengersProxy, PositionProxy positionProxy) {
         this.authenticationProxy = authenticationProxy;
         this.usersProxy = usersProxy;
         this.tripProxy = tripProxy;
         this.notificationsProxy = notificationsProxy;
         this.passengersProxy = passengersProxy;
+        this.positionProxy = positionProxy;
     }
 
     public String connect(Credentials credentials) {
@@ -169,17 +170,27 @@ public class GatewayService {
 
     public Iterable<Trip> searchAllTrips(LocalDate dDate, Double oLat, Double oLon, Double dLat, Double dLon) {
         //return tripProxy.readAll(dDate, oLat, oLon, dLat, dLon);
-        return this.searchAllTripsByDepartureDate(dDate);
-        // TODO in progress..
+        if (dDate != null) {
+            Iterable<Trip> trips = tripProxy.readAll(dDate, null, null, null, null);
+            return filterTripWithSeatingLeft(trips);
+        }
+        if (oLat != null || oLon != null) {
+            Iterable<Trip> trips = tripProxy.readAll(null, oLat, oLon, null, null);
+            Iterable<Trip> tripsFiltered = filterTripWithSeatingLeft(trips);
+            return this.searchAllTripsByOriginPosition(oLat, oLon, tripsFiltered);
+        }
+
+        Iterable<Trip> trips = tripProxy.readAll(null, null, null, dLat, dLon);
+        Iterable<Trip> tripsFiltered = filterTripWithSeatingLeft(trips);
+        return this.searchAllTripsByDestinationPosition(dLat, dLon, tripsFiltered);
     }
 
-    private Iterable<Trip> searchAllTripsByDepartureDate(LocalDate dDate) {
-        Iterable<Trip> trips = tripProxy.readAll(dDate, null, null, null, null);
-        Iterable<Trip> tripsSeatingLeft =  StreamSupport.stream(trips.spliterator(), false)
+    private Iterable<Trip> filterTripWithSeatingLeft(Iterable<Trip> trips) {
+        return StreamSupport.stream(trips.spliterator(), false)
             .filter(trip -> {
-
+                // Filter out trips where no available seating left
                 long count = StreamSupport.stream(
-                    passengersProxy.getPassengersOfTrip(trip.getId()).spliterator(), false)
+                        passengersProxy.getPassengersOfTrip(trip.getId()).spliterator(), false)
                     .filter(passenger ->
                         passenger.getStatus().equalsIgnoreCase(
                             PassengerStatus.ACCEPTED.toString().toLowerCase()))
@@ -189,9 +200,45 @@ public class GatewayService {
             })
             .limit(20)
             .toList();
+    }
 
-        System.out.println(tripsSeatingLeft);
-        return tripsSeatingLeft;
+    private Iterable<Trip> searchAllTripsByOriginPosition(Double originLat, Double originLon, Iterable<Trip> filteredTrips) {
+        // Sort based on distance between originLat & originLon from user to all available trips
+        return StreamSupport.stream(filteredTrips.spliterator(), false)
+            .sorted(new Comparator<Trip>() {
+                @Override
+                public int compare(Trip o1, Trip o2) {
+
+                    double trip1Dist = positionProxy.getDistance(originLat, originLon,
+                        o1.getOrigin().getLatitude(), o1.getOrigin().getLongitude());
+                    double trip2Dist = positionProxy.getDistance(originLat, originLon,
+                        o2.getOrigin().getLatitude(), o2.getOrigin().getLongitude());
+
+                    if (trip1Dist < trip2Dist) return -1;
+                    else if (trip1Dist > trip2Dist) return 1;
+                    return 0;
+                }
+            }).toList();
+    }
+
+    private Iterable<Trip> searchAllTripsByDestinationPosition(Double destinationLat, Double destinationLon,
+        Iterable<Trip> filteredTrips) {
+        // Sort based on distance between destinationLat & destinationLon from user to all available trips
+        return StreamSupport.stream(filteredTrips.spliterator(), false)
+            .sorted(new Comparator<Trip>() {
+                @Override
+                public int compare(Trip o1, Trip o2) {
+
+                    double trip1Dist = positionProxy.getDistance(destinationLat, destinationLon,
+                        o1.getDestination().getLatitude(), o1.getDestination().getLongitude());
+                    double trip2Dist = positionProxy.getDistance(destinationLat, destinationLon,
+                        o2.getDestination().getLatitude(), o2.getDestination().getLongitude());
+
+                    if (trip1Dist < trip2Dist) return -1;
+                    else if (trip1Dist > trip2Dist) return 1;
+                    return 0;
+                }
+            }).toList();
     }
 
     public Trip getOneTripInformations(int tripId) {

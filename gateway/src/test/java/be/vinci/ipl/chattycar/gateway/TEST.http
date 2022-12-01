@@ -270,7 +270,11 @@ Authorization: {{jonathanToken}}
 ### Get all trips from a departure Date
 GET http://localhost:8080/trips?departure_date=2022-12-27
 
+### Get all trips filtered by distance of originLat & originLon
+GET http://localhost:8080/trips?originLat=50&originLon=89
 
+### Get all trips filtered by distance of destinationLat & destinationLon
+GET http://localhost:8080/trips?destinationLat=50&destinationLon=89
 
 
 

@@ -127,10 +127,12 @@ public class GatewayController {
     @GetMapping("/trips") //get list of trip with optional search queries
     Iterable<Trip> searchAllTrips(
         @RequestParam(required = false, name = "departure_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate depDate,
-        @RequestParam(required = false) Double oLat, @RequestParam(required = false) Double oLon,
-        @RequestParam(required = false) Double dLat, @RequestParam(required = false) Double dLon) {
+            @RequestParam(required = false, name = "originLat") Double oLat,
+            @RequestParam(required = false, name = "originLon") Double oLon,
+            @RequestParam(required = false, name = "destinationLat") Double dLat,
+            @RequestParam(required = false, name = "destinationLon") Double dLon) {
 
-        return service.searchAllTrips(depDate, oLat, oLon, dLat, dLon);
+        return service.searchAllTrips(depDate, oLat, oLon, dLat, dLon); // 400 || 200
     }
 
     // OK
