@@ -64,6 +64,12 @@ public class NotificationsService {
         return true;
     }
 
+    /**
+     * Delete notification of a trip for a specific user
+     * @param tripId the id of the trip
+     * @param userId the id of the user
+     * @return true if it was deleted, false if notification not found
+     */
     public boolean deleteNotificationOfTripOfUser(int tripId, int userId) {
         if (!repository.existsByUserIdAndTripId(userId, tripId))
             return false;

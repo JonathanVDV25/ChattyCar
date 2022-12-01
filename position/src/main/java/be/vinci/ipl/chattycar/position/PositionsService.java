@@ -17,9 +17,8 @@ public class PositionsService {
    */
   public double getDistance(double originLatitude, double originLongitude,
       double destinationLatitude, double destinationLongitude) {
-    double distance = Math.acos(Math.sin(destinationLatitude * Math.PI / 180.0) * Math.sin(originLatitude * Math.PI / 180.0) +
+    return Math.acos(Math.sin(destinationLatitude * Math.PI / 180.0) * Math.sin(originLatitude * Math.PI / 180.0) +
         Math.cos(destinationLatitude * Math.PI / 180.0) * Math.cos(originLatitude * Math.PI / 180.0) *
             Math.cos((originLongitude - destinationLongitude) * Math.PI / 180.0)) * EARTH_RADIUS;
-    return distance;
   }
 }

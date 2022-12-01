@@ -474,7 +474,7 @@ public class GatewayService {
      * Get the passenger of a trip.
      * @param tripId the trip's id.
      * @param userId the user's id.
-     * @return
+     * @return the passenger found, null else
      */
     public NoIdPassenger getPassenger(int tripId, int userId) {
         try {
