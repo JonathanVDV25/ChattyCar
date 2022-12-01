@@ -31,40 +31,84 @@ public class GatewayService {
         this.positionProxy = positionProxy;
     }
 
+    /**
+     * Connect user.
+     * @param credentials the user's credentials.
+     * @return token created from the user's credentials.
+     */
     public String connect(Credentials credentials) {
         return authenticationProxy.connect(credentials);
     }
 
+    /**
+     * Verify the user's token.
+     * @param token the user's token.
+     * @return the decoded string.
+     */
     public String verify(String token) {
         return authenticationProxy.verify(token);
     }
 
+    /**
+     * Create user.
+     * @param user the new user.
+     * @return the new user.
+     */
     public User createOneUser(NewUser user){
         authenticationProxy.createCredentials(user.getEmail(), user.toCredentials());
         return usersProxy.createOne(user);
     }
 
+    /**
+     * Find user from email.
+     * @param email the user's email.
+     * @return the user.
+     */
     public User findOneUser(String email) {
         return usersProxy.readOneByEmail(email);
     }
 
+    /**
+     * Update the user password.
+     * @param credentials the user's credentials.
+     */
     public void updateOneUserPassword(Credentials credentials) {
         User user = findOneUser(credentials.getEmail());
         authenticationProxy.updateCredentials(user.getEmail(), credentials);
     }
 
+    /**
+     * Get user info from userId.
+     * @param id the user's id.
+     * @return the user.
+     */
     public User getOneUserInfo(int id) {
         return usersProxy.readOneById(id);
     }
 
+    /**
+     * Get user info from user email.
+     * @param email the email of the user.
+     * @return the user.
+     */
     public User getOneUserInfo(String email) {
         return usersProxy.readOneByEmail(email);
     }
 
+    /**
+     * Update user info.
+     * @param id the id of user.
+     * @param user the new user's info.
+     */
     public void updateOneUserInfo(int id, User user) {
         usersProxy.updateOne(id, user);
     }
 
+    /**
+     * Delete user.
+     * @param id the user's id.
+     * @param userEmail the user's email.
+     */
     public void deleteOneUser(int id, String userEmail) {
         Iterable<Trip> driverTrips = tripProxy.readAllTripsByDriver(id);
 
@@ -115,6 +159,11 @@ public class GatewayService {
         authenticationProxy.deleteCredentials(userEmail);
     }
 
+    /**
+     * Get a list of trips of a driver.
+     * @param id the driver id.
+     * @return the list of trips.
+     */
     public Iterable<Trip> getAllDriverTrips(int id) {
         Iterable<Trip> trips = tripProxy.readAllTripsByDriver(id);
         System.out.println(trips);
@@ -122,6 +171,11 @@ public class GatewayService {
             .filter(trip -> trip.getDepartureDate().isAfter(LocalDate.now())).toList();
     }
 
+    /**
+     * Get a list of trips of a passenger with the status.
+     * @param userId the user's id.
+     * @return the list of trips.
+     */
     public Map<String, Iterable<Trip>> getAllPassengerTrips(int userId) {
         Iterable<Trip> trips = passengersProxy.getTripsWhereUserIsPassenger(userId);
         System.out.println("trips:"+trips);
@@ -153,18 +207,41 @@ public class GatewayService {
         return passengerStatus;
     }
 
+    /**
+     * Get a list of notifications of a user.
+     * @param id the user's id.
+     * @return the list of notifications.
+     */
     public Iterable<Notification> getAllNotifs(int id) {
         return notificationsProxy.getNotification(id);
     }
 
+    /**
+     * Delete all notifications of a user.
+     * @param id the user's id.
+     */
     public void deleteAllNotifs(int id) {
         notificationsProxy.removeNotificationOfAUser(id);
     }
 
+    /**
+     * Create a new trip.
+     * @param trip the new trip .
+     * @return the trip created.
+     */
     public Trip createOneTrip(NewTrip trip) {
         return tripProxy.createOne(trip);
     }
 
+    /**
+     * Get a list of trips with the info provided.
+     * @param dDate date of the trip.
+     * @param oLat the origin's latitude of the trip.
+     * @param oLon the origin's longitude of the trip.
+     * @param dLat the destination's latitude of the trip.
+     * @param dLon the destination's longitude of the trip.
+     * @return list of trips.
+     */
     public Iterable<Trip> searchAllTrips(LocalDate dDate, Double oLat, Double oLon, Double dLat, Double dLon) {
         //return tripProxy.readAll(dDate, oLat, oLon, dLat, dLon);
         if (dDate != null) {
@@ -187,6 +264,11 @@ public class GatewayService {
         return filterTripWithSeatingLeft(trips);
     }
 
+    /**
+     * Get list of trips with seat available.
+     * @param trips the list of trips to sort.
+     * @return the list of trips with seat available.
+     */
     private Iterable<Trip> filterTripWithSeatingLeft(Iterable<Trip> trips) {
         return StreamSupport.stream(trips.spliterator(), false)
             .filter(trip -> {
@@ -204,6 +286,13 @@ public class GatewayService {
             .toList();
     }
 
+    /**
+     * Get a list of trips with the origin provided by user.
+     * @param originLat the origin's latitude.
+     * @param originLon the origin's longitude.
+     * @param filteredTrips the sorted trips.
+     * @return the list of trips sorted.
+     */
     private Iterable<Trip> searchAllTripsByOriginPosition(Double originLat, Double originLon, Iterable<Trip> filteredTrips) {
         // Sort based on distance between originLat & originLon from user to all available trips
         return StreamSupport.stream(filteredTrips.spliterator(), false)
@@ -223,6 +312,13 @@ public class GatewayService {
             }).toList();
     }
 
+    /**
+     * Get a list of trips with the destination provided by user.
+     * @param destinationLat the destination's latitude.
+     * @param destinationLon the destination's longitude.
+     * @param filteredTrips the sorted trips.
+     * @return the list of trips sorted
+     */
     private Iterable<Trip> searchAllTripsByDestinationPosition(Double destinationLat, Double destinationLon,
         Iterable<Trip> filteredTrips) {
         // Sort based on distance between destinationLat & destinationLon from user to all available trips
@@ -243,10 +339,19 @@ public class GatewayService {
             }).toList();
     }
 
+    /**
+     * Get a trip's info.
+     * @param tripId the trip's id.
+     * @return the trip's info.
+     */
     public Trip getOneTripInformations(int tripId) {
         return tripProxy.readOne(tripId);
     }
 
+    /**
+     * Delete a trip.
+     * @param tripId the trip's id.
+     */
     public void deleteOneTrip(int tripId) {
         //DELETE NOTIFICATIONS
         try {
@@ -262,6 +367,11 @@ public class GatewayService {
         tripProxy.deleteOne(tripId);
     }
 
+    /**
+     * Get a list of user's status of a trip.
+     * @param tripId the id of a trip.
+     * @return the map of user's status of a trip.
+     */
     public Map<String, Iterable<User>> getAllPassengersStatus(int tripId) {
         Iterable<Passenger> passengers = passengersProxy.getPassengersOfTrip(tripId);
         Map<String, Iterable<User>> usersTripStatus = new HashMap<>();
@@ -295,6 +405,12 @@ public class GatewayService {
         return usersTripStatus;
     }
 
+    /**
+     * Add a passenger to a trip.
+     * @param trip the trip's id.
+     * @param userId the user's id.
+     * @return the new passenger of the trip.
+     */
     public NoIdPassenger addOnePassenger(Trip trip, int userId) {
         long count = StreamSupport.stream(passengersProxy.getPassengersOfTrip(trip.getId()).spliterator(), false)
             .filter(passenger -> passenger.getStatus().equalsIgnoreCase(
@@ -315,10 +431,22 @@ public class GatewayService {
         return passenger;
     }
 
+    /**
+     * Get a status of a passenger from a trip.
+     * @param tripId the trip's id.
+     * @param userId the user's id.
+     * @return the passenger.
+     */
     public String getOnePassengerStatus(int tripId, int userId) {
         return passengersProxy.getOnePassenger(tripId, userId).getStatus();
     }
 
+    /**
+     * Update the status of a passenger.
+     * @param tripId the trip's id.
+     * @param userId the user's id.
+     * @param newStatus the new status of the passenger.
+     */
     public void updateOnePassengerStatus(int tripId, int userId, String newStatus) {
         NoIdPassenger passenger = passengersProxy.getOnePassenger(tripId, userId);
         passenger.setStatus(newStatus);
@@ -327,6 +455,11 @@ public class GatewayService {
         notificationsProxy.createNotification(new NoIdNotification(userId, tripId, LocalDate.now(), "Votre demande de voyage " + tripId + " est " + newStatus)); // add notif
     }
 
+    /**
+     * Delete a passenger of a trip.
+     * @param tripId the trip's id.
+     * @param userId the user's id.
+     */
     public void deleteOnePassenger(int tripId, int userId) {
         // REMOVE NOTIF
         try {
@@ -337,6 +470,12 @@ public class GatewayService {
         passengersProxy.deleteOnePassenger(tripId, userId);
     }
 
+    /**
+     * Get the passenger of a trip.
+     * @param tripId the trip's id.
+     * @param userId the user's id.
+     * @return
+     */
     public NoIdPassenger getPassenger(int tripId, int userId) {
         try {
             return passengersProxy.getOnePassenger(tripId, userId);
