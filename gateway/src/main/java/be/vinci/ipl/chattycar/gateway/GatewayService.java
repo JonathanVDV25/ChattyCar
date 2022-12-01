@@ -176,10 +176,15 @@ public class GatewayService {
             Iterable<Trip> tripsFiltered = filterTripWithSeatingLeft(trips);
             return this.searchAllTripsByOriginPosition(oLat, oLon, tripsFiltered);
         }
+        if (dLat != null || dLon != null) {
+            Iterable<Trip> trips = tripProxy.readAll(null, null, null, dLat, dLon);
+            Iterable<Trip> tripsFiltered = filterTripWithSeatingLeft(trips);
+            return this.searchAllTripsByDestinationPosition(dLat, dLon, tripsFiltered);
+        }
 
-        Iterable<Trip> trips = tripProxy.readAll(null, null, null, dLat, dLon);
-        Iterable<Trip> tripsFiltered = filterTripWithSeatingLeft(trips);
-        return this.searchAllTripsByDestinationPosition(dLat, dLon, tripsFiltered);
+        // return all
+        Iterable<Trip> trips = tripProxy.readAll(null, null, null, null, null);
+        return filterTripWithSeatingLeft(trips);
     }
 
     private Iterable<Trip> filterTripWithSeatingLeft(Iterable<Trip> trips) {
