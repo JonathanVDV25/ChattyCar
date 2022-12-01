@@ -50,15 +50,13 @@ public class GatewayController {
         service.updateOneUserPassword(user);
     }
 
-    // ok
+
     @GetMapping("/users/{id}") //get user info
     User getOneUserInfo(@PathVariable int id, @RequestHeader("Authorization") String token){
         service.verify(token);
-        User user = service.getOneUserInfo(id);
-        return user;
+        return service.getOneUserInfo(id);
     }
 
-    // return code 401 & 403 missing -- pas testé pq??
     @PutMapping("/users/{id}") // update user info
     void updateOneUserInfo(@PathVariable int id, @RequestBody User user, @RequestHeader("Authorization") String token){
         String email = service.verify(token);
@@ -67,14 +65,14 @@ public class GatewayController {
         service.updateOneUserInfo(id, user);
     }
 
-    // return code 401 & 403 missing -- pas testé pq?
     @DeleteMapping("/users/{id}") //delete user
     void deleteOneUser(@PathVariable int id, @RequestHeader("Authorization") String token){
-        String email = service.verify(token);
-        User user = service.getOneUserInfo(id);
+
+        String email = service.verify(token); // 401
+        User user = service.getOneUserInfo(id); // 404
         if (!email.equals(user.getEmail()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
-        service.deleteOneUser(id);
+        service.deleteOneUser(id, email);
     }
 
     // ok

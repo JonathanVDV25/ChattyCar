@@ -16,9 +16,9 @@ public interface NotificationsProxy {
     @GetMapping("/notifications/{id_user}")
     Iterable<Notification> getNotification(@PathVariable int id_user);
 
-    @DeleteMapping("/notifications/{id_user}")
+    @DeleteMapping("/notifications/users/{id_user}")
     void removeNotificationOfAUser(@PathVariable int id_user);
 
-    @DeleteMapping("/notifications/{id_trip}")
+    @DeleteMapping("/notifications/trips/{id_trip}")
     void removeNotificationOfATrip(@PathVariable int id_trip);
 }

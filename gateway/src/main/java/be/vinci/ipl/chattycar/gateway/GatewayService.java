@@ -1,6 +1,7 @@
 package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import be.vinci.ipl.chattycar.gateway.data.*;
@@ -8,6 +9,7 @@ import be.vinci.ipl.chattycar.gateway.data.*;
 import javax.management.Notification;
 import java.time.LocalDate;
 import java.util.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class GatewayService {
@@ -58,33 +60,54 @@ public class GatewayService {
         usersProxy.updateOne(id, user);
     }
 
-    public void deleteOneUser(int id) {
+    public void deleteOneUser(int id, String userEmail) {
         Iterable<Trip> driverTrips = tripProxy.readAllTripsByDriver(id);
 
         // REMOVE NOTIF OF THIS USER
-        notificationsProxy.removeNotificationOfAUser(id);
-
+        try {
+            notificationsProxy.removeNotificationOfAUser(id);
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatus().value() != 404) // Only NOT FOUND exception will be catched
+                throw ex;
+        }
         // REMOVE NOTIF OTHERS RECEIVE FROM THIS DRIVER
-        for (Trip trip: driverTrips){
-            notificationsProxy.removeNotificationOfATrip(trip.getId());
+        try {
+            for (Trip trip: driverTrips) {
+                notificationsProxy.removeNotificationOfATrip(trip.getId());
+            }
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatus().value() != 404) // Only NOT FOUND exception will be catched
+                throw ex;
         }
-
         // REMOVE PASSENGERS OF THIS DRIVER
-        for (Trip trip: driverTrips){
-            passengersProxy.deleteAllPassengersOfTrip(trip.getId());
+        try {
+            for (Trip trip: driverTrips){
+                passengersProxy.deleteAllPassengersOfTrip(trip.getId());
+            }
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatus().value() != 404) // Only NOT FOUND exception will be catched
+                throw ex;
         }
-
         // REMOVE TRIPS OF THIS DRIVER
-        tripProxy.deleteAllTripsByDriver(id);
-
+        try {
+            tripProxy.deleteAllTripsByDriver(id);
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatus().value() != 404) // Only NOT FOUND exception will be catched
+                throw ex;
+        }
         // REMOVE THIS PASSENGER FROM TRIPS
-        passengersProxy.deleteAllTripsFromUserWhereUserIsPassenger(id);
+        try {
+            passengersProxy.deleteAllTripsFromUserWhereUserIsPassenger(id);
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatus().value() != 404) // Only NOT FOUND exception will be catched
+                throw ex;
+        }
 
         // REMOVE THIS USER
         usersProxy.deleteOne(id);
 
         // REMOVE AUTH
-        authenticationProxy.deleteCredentials(usersProxy.readOneById(id).getEmail());
+        authenticationProxy.deleteCredentials(userEmail);
     }
 
     public Iterable<Trip> getAllDriverTrips(int id) {

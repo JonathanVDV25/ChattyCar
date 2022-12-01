@@ -71,7 +71,13 @@ public class TripController {
   @GetMapping("/trips/user/{driver_id}")
   public Iterable<Trip> readAllTripsByDriver(@PathVariable int driver_id) {
     // Vérification si driver existe -> Gateway
-    return service.readByDriver(driver_id);
+    System.out.println("test");
+    Iterable<Trip> t = service.readByDriver(driver_id);
+    for (Trip tr: t) {
+      System.out.println(tr);
+    }
+    System.out.println("sorti");
+    return t;
   }
 
   @DeleteMapping("/trips/user/{driver_id}")

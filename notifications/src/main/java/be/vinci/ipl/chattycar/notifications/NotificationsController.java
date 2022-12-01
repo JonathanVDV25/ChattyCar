@@ -27,13 +27,13 @@ public class NotificationsController {
         return service.getAllNotificationForAUser(userId);
     }
 
-    @DeleteMapping("/notifications/{user_id}")
+    @DeleteMapping("/notifications/users/{user_id}")
     public void removeNotificationOfAUser(@PathVariable("user_id") int userId){
         boolean found = service.deleteAllNotification(userId);
         if(!found) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/notification/{trip_id}")
+    @DeleteMapping("/notifications/trips/{trip_id}")
     public void removeNotificationOfATrip(@PathVariable("trip_id") int tripId){
         boolean found = service.deleteNotificationOfATrip(tripId);
         if(!found) throw  new ResponseStatusException(HttpStatus.NOT_FOUND);

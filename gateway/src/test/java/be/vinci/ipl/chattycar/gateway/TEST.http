@@ -1,41 +1,224 @@
-### créer une compte a
-
-POST http://localhost:8080/users
-Content-Type: application/json
-
-{
-  "email" : "a@a.com",
-  "firstname" : "aa",
-  "lastname" : "bb",
-  "password" : "a"
-}
-
-#### créer une compte b
-
-POST http://localhost:8080/users
-Content-Type: application/json
-
-{
-  "email" : "b@a.com",
-  "firstname" : "aa",
-  "lastname" : "bb",
-  "password" : "a"
-}
-
-### connecter avec compte a
-
+### connecter utilisateur jonathan@gmail.com
 POST http://localhost:8080/auth
 Content-Type: application/json
 
 {
-  "email": "a@a.com",
-  "password": "a"
+  "email": "jonathan@gmail.com",
+  "password": "notsaying"
 }
 
-> {%client.global.set("token", response.body)%}
+> {%client.global.set("jonathanToken", response.body)%}
+
+### Connecter utilisateur avec champ manquant  -> Erreur 400
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com"
+}
+
+### Connecter utilisateur avec champ manquant  -> Erreur 400
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "password": "notsaying"
+}
+
+### Connecter utilisateur avec mauvais mdp  -> Erreur 401
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "email": "jonathan@gmail.com",
+  "password": "notsaying2"
+}
+
+
+### créer un utilisateur
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "email" : "jonathan@gmail.com",
+  "firstname" : "Jonathan",
+  "lastname" : "Van de Vyver",
+  "password" : "notsaying"
+}
+
+### créer un deuxième utilisateur
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "email" : "jonathan1@gmail.com",
+  "firstname" : "Jonathan",
+  "lastname" : "Van de Vyver",
+  "password" : "notsaying"
+}
+
+### connecter utilisateur jonathan1@gmail.com
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "email": "jonathan1@gmail.com",
+  "password": "notsaying"
+}
+
+> {%client.global.set("jonathan1Token", response.body)%}
+
+
+### Trouver un utilisateur sur base de son email
+GET http://localhost:8080/users?email=jonathan@gmail.com
+
+### Trouver un utilisateur sur base d'un email inexistant ->  Erreur 404
+GET http://localhost:8080/users?email=jonathan32@gmail.com
+
+
+### Modifier mdp d'un user
+PUT http://localhost:8080/users
+Content-Type: application/json
+Authorization: {{jonathanToken}}
+
+{
+  "email" : "jonathan@gmail.com",
+  "password": "notsaying2"
+}
+
+### Modifier mdp d'un user avec des credentials incorrect -> Erreur 400
+PUT http://localhost:8080/users
+Content-Type: application/json
+Authorization: {{jonathanToken}}
+
+{
+  "email" : "jonathan@gmail.com"
+}
+
+### Modifier mdp d'un user avec authentification qui manque -> Erreur 401
+PUT http://localhost:8080/users
+Content-Type: application/json
+Authorization: {{notKnownToken}}
+
+{
+  "email" : "jonathan@gmail.com",
+  "password": "notsaying2"
+}
+
+### Modifier mdp d'un user avec un token différent du compte qu'on veut modifier -> Erreur 403
+PUT http://localhost:8080/users
+Content-Type: application/json
+Authorization: {{jonathan1Token}}
+
+{
+  "email" : "jonathan@gmail.com",
+  "password": "notsaying2"
+}
+
+### Modifier mdp d'un user avec un email inconnu -> Erreur 404  (JSP COMMENT TESTER)
+PUT http://localhost:8080/users
+Content-Type: application/json
+Authorization: {{null}}
+
+{
+  "email" : "null",
+  "password": "notsaying2"
+}
+
+
+### Get user information with missing info -> Error 401
+GET http://localhost:8080/users/1
+Authorization: {{unknownToken}}
+
+### Get user info with unknown user id -> Error 404
+GET http://localhost:8080/users/65
+Authorization: {{jonathanToken}}
+
+### Get user info
+GET http://localhost:8080/users/2
+Authorization: {{jonathanToken}}
+
+
+### Update user info with incorrect user -> Error 400
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+Authorization: {{jonathanToken}}
+
+{
+  "id": 1,
+  "email": "jonathan@gmail.com",
+  "firstname": "jojo"
+}
+
+### Update user info with missing authentication -> Error 401
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+Authorization: {{unknownToken}}
+
+{
+  "id": 1,
+  "email": "jonathan@gmail.com",
+  "firstname": "jojo",
+  "lastname": "VDV"
+}
+
+### Update user info with token of another member email -> Error 403
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+Authorization: {{jonathan1Token}}
+
+{
+  "id": 1,
+  "email": "jonathan@gmail.com",
+  "firstname": "jojo",
+  "lastname": "VDV"
+}
+
+### Update user info with unknown user_id -> Error 404 (IDK HOW TO VERIFY IT)
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+Authorization: {{jonathanToken}}
+
+{
+  "id": 65,
+  "email": "jonathan@gmail.com",
+  "firstname": "jojo",
+  "lastname": "VDV"
+}
+
+### Update user info
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+Authorization: {{jonathanToken}}
+
+{
+  "id": 1,
+  "email": "jonathan@gmail.com",
+  "firstname": "JAQUES",
+  "lastname": "VDV"
+}
+
+
+### Delete user with missing authentication -> Error 401
+DELETE http://localhost:8080/users/1
+Authorization: {{unknownToken}}
+
+### Delete user with token of another member -> Error 403
+DELETE http://localhost:8080/users/1
+Authorization: {{jonathan1Token}}
+
+### Delete user with unknown member id -> Error 404 (IDK HOW TO TEST IT)
+DELETE http://localhost:8080/users/65
+Authorization: {{unknownToken}}
+
+### Delete user
+DELETE http://localhost:8080/users/1
+Authorization: {{jonathanToken}}
+
+
+
 
 ### change le prenom du compte a
-
 PUT http://localhost:8080/users
 Content-Type: application/json
 Authorization: {{token}}
