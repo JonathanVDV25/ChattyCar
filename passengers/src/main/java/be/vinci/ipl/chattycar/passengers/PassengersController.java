@@ -59,7 +59,10 @@ public class PassengersController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
-    // TODO No verification if passenger.status is the same as the one in DB !
+    NoIdPassenger passengerDB = service.getOne(tripId, userId);
+    if (!passengerDB.getStatus().equalsIgnoreCase(PassengerStatus.PENDING.toString()))
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
     boolean updatedPassenger = service.updateOne(userId, tripId, passenger);
     if (!updatedPassenger) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 

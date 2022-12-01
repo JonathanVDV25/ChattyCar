@@ -2,6 +2,7 @@ package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.*;
 import java.util.stream.StreamSupport;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import be.vinci.ipl.chattycar.gateway.data.*;
@@ -126,6 +127,7 @@ public class GatewayService {
         return passengersProxy.getTripsWhereUserIsPassenger(id);
         // TODO delete useless method
     }
+
     public Map<String, Iterable<Trip>> getAllPassengerTrips(int userId) {
         Iterable<Trip> trips = passengersProxy.getTripsWhereUserIsPassenger(userId);
         System.out.println("trips:"+trips);
@@ -294,15 +296,33 @@ public class GatewayService {
         return usersTripStatus;
     }
 
-    public NoIdPassenger addOnePassenger(int tripId, int userId) {
-        return passengersProxy.createOnePassenger(tripId, userId);
+    public NoIdPassenger addOnePassenger(Trip trip, int userId) {
+        long count = StreamSupport.stream(passengersProxy.getPassengersOfTrip(trip.getId()).spliterator(), false)
+            .filter(passenger -> passenger.getStatus().equalsIgnoreCase(
+                    PassengerStatus.ACCEPTED.toString().toLowerCase()))
+            .count();
+        if (count >= trip.getAvailableSeating())
+            return null;
+
+        NoIdPassenger passenger = null;
+        try {
+            passenger = passengersProxy.createOnePassenger(trip.getId(), userId);
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatus().value() == 403)
+                return null;
+        }
+
+        notificationsProxy.createNotification(new NoIdNotification(trip.getDriverId(), trip.getId()));
+        return passenger;
     }
 
     public String getOnePassengerStatus(int tripId, int userId) {
         return passengersProxy.getOnePassenger(tripId, userId).getStatus();
     }
 
-    public void updateOnePassengerStatus(int tripId, int userId, NoIdPassenger passenger) {
+    public void updateOnePassengerStatus(int tripId, int userId, String newStatus) {
+        NoIdPassenger passenger = passengersProxy.getOnePassenger(tripId, userId);
+        passenger.setStatus(newStatus);
         passengersProxy.updateOnePassenger(tripId, userId, passenger);
     }
 
@@ -313,5 +333,15 @@ public class GatewayService {
 
     public Iterable<Passenger> listPassengers(int tripId){
         return passengersProxy.getPassengersOfTrip(tripId);
+    }
+
+    public NoIdPassenger getPassenger(int tripId, int userId) {
+        try {
+            return passengersProxy.getOnePassenger(tripId, userId);
+        } catch (ResponseStatusException ex) {
+            if (ex.getStatus().value() == 404)
+                return null;
+        }
+        return null;
     }
 }

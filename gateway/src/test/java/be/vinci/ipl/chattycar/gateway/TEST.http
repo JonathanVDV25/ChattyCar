@@ -293,7 +293,18 @@ GET http://localhost:8080/trips/2/passengers
 Authorization: {{jonathanToken}}
 
 
+### Add passenger to trip
+POST http://localhost:8080/trips/1/passengers/2
+Authorization: {{jonathan1Token}}
 
+### Get passenger status
+GET http://localhost:8080/trips/1/passengers/2
+Authorization: {{jonathanToken}}
+
+
+### Update passenger status
+PUT http://localhost:8080/trips/1/passengers/2?status=refused
+Authorization: {{jonathanToken}}
 
 
 

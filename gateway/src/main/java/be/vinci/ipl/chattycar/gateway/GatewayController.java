@@ -3,6 +3,7 @@ package be.vinci.ipl.chattycar.gateway;
 import be.vinci.ipl.chattycar.gateway.models.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -163,38 +164,51 @@ public class GatewayController {
         return result;
     }
 
-    // OK
     @PostMapping("/trips/{trip_id}/passengers/{user_id}") // add passenger to trip (with pending status)
-    void addOnePassenger(@PathVariable int trip_id, @PathVariable int user_id, @RequestHeader("Authorization") String token){
-        String email = service.verify(token);
-        Trip trip = service.getOneTripInformations(trip_id);
-        if (trip.getDriverId()==user_id)
+    ResponseEntity<NoIdPassenger> addOnePassenger(@PathVariable("trip_id") int tripId, @PathVariable("user_id") int userId,
+        @RequestHeader("Authorization") String token){
+        String email = service.verify(token); //401
+
+        Trip trip = service.getOneTripInformations(tripId); //404
+        User user = service.getOneUserInfo(userId); // 404
+
+        if (!email.equals(user.getEmail()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
-        service.addOnePassenger(trip_id, user_id); // TODO No return value expected but service returns NoIdPasseneger
+
+        NoIdPassenger passenger = service.addOnePassenger(trip, userId);
+        if (passenger == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST); // 400
+        return new ResponseEntity<>(passenger, HttpStatus.CREATED);
     }
 
-    // ok
     @GetMapping("/trips/{trip_id}/passengers/{user_id}") // get passenger status
     String getOnePassengerStatus(@PathVariable int trip_id, @PathVariable int user_id, @RequestHeader("Authorization") String token){
-        String email = service.verify(token);
-        Trip trip = service.getOneTripInformations(trip_id);
-        User user = service.getOneUserInfo(trip.getDriverId());
-//        if (!email.equals(user.getEmail()))
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
+        String email = service.verify(token); //401
+        User userEmail = service.getOneUserInfo(email);
+
+        Trip trip = service.getOneTripInformations(trip_id); //404
+        User userDriver = service.getOneUserInfo(trip.getDriverId()); //404
+
+        // See if he is passenger of trip
+        NoIdPassenger p = service.getPassenger(trip_id, userEmail.getId());
+        if (!email.equals(userDriver.getEmail()) && p == null)
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
         return service.getOnePassengerStatus(trip_id, user_id);
     }
 
-    // ok
     @PutMapping("/trips/{trip_id}/passengers/{user_id}") // update passenger status
-    void updateOnePassengerStatus(@PathVariable int trip_id, @PathVariable int user_id,
-                                  @RequestBody NoIdPassenger passenger, @RequestHeader("Authorization") String token){
-        String email = service.verify(token);
-        System.out.println(passenger);
-        Trip trip = service.getOneTripInformations(trip_id);
-        User user = service.getOneUserInfo(trip.getDriverId());
-        if (trip.getDriverId()!=user.getId())
+    void updateOnePassengerStatus(@PathVariable(name = "trip_id") int tripId,
+        @PathVariable(name = "user_id") int userId,
+        @RequestParam(required = true, name = "status") String newStatus,
+        @RequestHeader("Authorization") String token) {
+
+        String email = service.verify(token); // 401
+        Trip trip = service.getOneTripInformations(tripId); //404
+        User userDriver = service.getOneUserInfo(trip.getDriverId());
+
+        if (!email.equals(userDriver.getEmail()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
-        service.updateOnePassengerStatus(trip_id, user_id, passenger);
+        service.updateOnePassengerStatus(tripId, userId, newStatus);
     }
 
     // ok
