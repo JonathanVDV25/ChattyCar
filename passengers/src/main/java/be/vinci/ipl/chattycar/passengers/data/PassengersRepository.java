@@ -5,9 +5,9 @@ import javax.transaction.Transactional;
 import org.springframework.data.repository.CrudRepository;
 
 public interface PassengersRepository extends CrudRepository<Passenger, Integer> {
-  Iterable<Passenger> getByTripId(int tripId);
+  Iterable<Passenger> findByTripId(int tripId);
 
-  Iterable<Passenger> getByUserId(int userId);
+  Iterable<Passenger> findByUserId(int userId);
 
   Passenger findByUserIdAndTripId(int userId, int tripId);
 

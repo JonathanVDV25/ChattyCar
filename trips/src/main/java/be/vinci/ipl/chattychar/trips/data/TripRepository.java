@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface TripRepository extends CrudRepository<Trip, Integer> {
 
 
-  Iterable<Trip> findByDepartureDate(LocalDate departureDate);
+  Iterable<Trip> findByDepartureDateOrderByIdDesc(LocalDate departureDate);
 
   Iterable<Trip> findByOrigin(Position origin);
 

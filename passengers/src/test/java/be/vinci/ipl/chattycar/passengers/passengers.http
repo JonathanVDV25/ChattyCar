@@ -1,18 +1,18 @@
 ### Create one passenger
-POST http://localhost:9004/passengers/1/1
+POST http://localhost:9004/passengers/1/2
 
 ### Create passenger with different tripId
 POST http://localhost:9004/passengers/2/1
 
 ### Get one passenger
-GET http://localhost:9004/passengers/1/1
+GET http://localhost:9004/passengers/1/2
 
 ### Update one passenger
-PUT http://localhost:9004/passengers/1/1
+PUT http://localhost:9004/passengers/1/2
 Content-Type: application/json
 
 {
-  "user_id": 1,
+  "user_id": 2,
   "trip_id": 1,
   "status": "AcCePtEd"
 }
@@ -27,7 +27,7 @@ GET http://localhost:9004/passengers/users/1
 DELETE http://localhost:9004/passengers/users/1
 
 ### Get all passengers of a trip
-GET http://localhost:9004/passengers/1
+GET http://localhost:9004/passengers/2
 
 ### Delete all passengers of a trip
 DELETE http://localhost:9004/passengers/1

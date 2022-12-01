@@ -1,12 +1,12 @@
 package be.vinci.ipl.chattycar.gateway;
 
 import be.vinci.ipl.chattycar.gateway.models.*;
-import org.springframework.http.HttpStatus;
+import java.util.stream.StreamSupport;
+import org.apache.logging.log4j.util.PropertySource;
 import org.springframework.stereotype.Service;
 
 import be.vinci.ipl.chattycar.gateway.data.*;
 
-import javax.management.Notification;
 import java.time.LocalDate;
 import java.util.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,6 +54,10 @@ public class GatewayService {
 
     public User getOneUserInfo(int id) {
         return usersProxy.readOneById(id);
+    }
+
+    public User getOneUserInfo(String email) {
+        return usersProxy.readOneByEmail(email);
     }
 
     public void updateOneUserInfo(int id, User user) {
@@ -111,35 +115,44 @@ public class GatewayService {
     }
 
     public Iterable<Trip> getAllDriverTrips(int id) {
-        return tripProxy.readAllTripsByDriver(id);
+        Iterable<Trip> trips = tripProxy.readAllTripsByDriver(id);
+        System.out.println(trips);
+        return StreamSupport.stream(trips.spliterator(), false)
+            .filter(trip -> trip.getDepartureDate().isAfter(LocalDate.now())).toList();
     }
 
     public Iterable<Trip> getALlTripsUser(int id) {
         return passengersProxy.getTripsWhereUserIsPassenger(id);
     }
-    public Map<PassengerStatus, List<Trip>> getAllPassengerTrips(int id) {
-        // TODO il manque le status (comme clé)(GET /users/{id}/passenger)
-        Iterable<Trip> trips = passengersProxy.getTripsWhereUserIsPassenger(id);
-        Map<PassengerStatus, List<Trip>> status = new HashMap<PassengerStatus, List<Trip>>();
+    public Map<String, Iterable<Trip>> getAllPassengerTrips(int userId) {
+        Iterable<Trip> trips = passengersProxy.getTripsWhereUserIsPassenger(userId);
+        System.out.println("trips:"+trips);
+        Iterable<Trip> filteredTripsFutureDepartureDate =
+            StreamSupport.stream(trips.spliterator(), false)
+                .filter(trip -> trip.getDepartureDate().isAfter(LocalDate.now()))
+                .toList();
+        System.out.println("filtered:"+filteredTripsFutureDepartureDate);
+        Map<String, Iterable<Trip>> passengerStatus = new HashMap<>();
 
         List<Trip> accepted = new ArrayList<>();
         List<Trip> refused = new ArrayList<>();
         List<Trip> pending = new ArrayList<>();
 
-        for(Trip trip : trips){
-            NoIdPassenger p = passengersProxy.getOnePassenger(trip.getId(), id);
-            if (p.getStatus().equals(PassengerStatus.ACCEPTED))
+        for(Trip trip : filteredTripsFutureDepartureDate){
+            System.out.println("trip:"+trip);
+            NoIdPassenger p = passengersProxy.getOnePassenger(trip.getId(), userId);
+            if (p.getStatus().equalsIgnoreCase(PassengerStatus.ACCEPTED.toString()))
                 accepted.add(trip);
-            else if (p.getStatus().equals(PassengerStatus.REFUSED))
+            else if (p.getStatus().equalsIgnoreCase(PassengerStatus.REFUSED.toString()))
                 refused.add(trip);
-            else if (p.getStatus().equals(PassengerStatus.PENDING))
+            else if (p.getStatus().equalsIgnoreCase(PassengerStatus.PENDING.toString()))
                 pending.add(trip);
         }
-        status.put(PassengerStatus.ACCEPTED, accepted);
-        status.put(PassengerStatus.REFUSED, refused);
-        status.put(PassengerStatus.PENDING, pending);
+        passengerStatus.put(PassengerStatus.ACCEPTED.toString().toLowerCase(), accepted);
+        passengerStatus.put(PassengerStatus.REFUSED.toString().toLowerCase(), refused);
+        passengerStatus.put(PassengerStatus.PENDING.toString().toLowerCase(), pending);
 
-        return status;
+        return passengerStatus;
     }
 
     public Iterable<Notification> getAllNotifs(int id) {
@@ -155,7 +168,30 @@ public class GatewayService {
     }
 
     public Iterable<Trip> searchAllTrips(LocalDate dDate, Double oLat, Double oLon, Double dLat, Double dLon) {
-        return tripProxy.readAll(dDate, oLat, oLon, dLat, dLon);
+        //return tripProxy.readAll(dDate, oLat, oLon, dLat, dLon);
+        return this.searchAllTripsByDepartureDate(dDate);
+        // TODO in progress..
+    }
+
+    private Iterable<Trip> searchAllTripsByDepartureDate(LocalDate dDate) {
+        Iterable<Trip> trips = tripProxy.readAll(dDate, null, null, null, null);
+        Iterable<Trip> tripsSeatingLeft =  StreamSupport.stream(trips.spliterator(), false)
+            .filter(trip -> {
+
+                long count = StreamSupport.stream(
+                    passengersProxy.getPassengersOfTrip(trip.getId()).spliterator(), false)
+                    .filter(passenger ->
+                        passenger.getStatus().equalsIgnoreCase(
+                            PassengerStatus.ACCEPTED.toString().toLowerCase()))
+                    .count();
+                System.out.println("count:"+count);
+                return count < trip.getAvailableSeating();
+            })
+            .limit(20)
+            .toList();
+
+        System.out.println(tripsSeatingLeft);
+        return tripsSeatingLeft;
     }
 
     public Trip getOneTripInformations(int tripId) {

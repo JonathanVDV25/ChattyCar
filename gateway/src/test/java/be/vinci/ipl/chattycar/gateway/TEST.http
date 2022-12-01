@@ -216,6 +216,69 @@ DELETE http://localhost:8080/users/1
 Authorization: {{jonathanToken}}
 
 
+### Get trips where user is the driver with missing authentication -> Error 401
+GET http://localhost:8080/users/1/driver
+Authorization: {{unkownToken}}
+
+### Get trips where user is the driver with others token -> Error 403
+GET http://localhost:8080/users/1/driver
+Authorization: {{jonathan1Token}}
+
+### Get trips where user is driver but user_id is unknown  -> Error 404
+GET http://localhost:8080/users/25/driver
+Authorization: {{jonathanToken}}
+
+### Get trips where user is the driver with a future departure date
+GET http://localhost:8080/users/1/driver
+Authorization: {{jonathanToken}}
+
+
+### Get trips where user is passenger & with future departure date
+GET http://localhost:8080/users/2/passenger
+Authorization: {{jonathan1Token}}
+
+
+### Get all notif of a user_id 2
+GET http://localhost:8080/users/2/notifications
+Authorization: {{jonathan1Token}}
+
+
+### Delete all notif of user_id 2
+DELETE http://localhost:8080/users/2/notifications
+Authorization: {{jonathan1Token}}
+
+### Create one trip
+POST http://localhost:8080/trips
+Content-Type: application/json
+Authorization: {{jonathanToken}}
+
+{
+  "origin": {
+    "latitude": 45.5,
+    "longitude": 75.5
+  },
+  "destination": {
+    "latitude": 89.9,
+    "longitude": 100.2
+  },
+  "departure": "2022-12-27",
+  "driver_id": 1,
+  "available_seating": 2
+}
+
+
+### Get all trips from a departure Date
+GET http://localhost:8080/trips?departure_date=2022-12-27
+
+
+
+
+
+
+
+
+
+
 
 
 ### change le prenom du compte a

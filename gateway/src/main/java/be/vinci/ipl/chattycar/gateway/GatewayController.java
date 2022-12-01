@@ -67,7 +67,6 @@ public class GatewayController {
 
     @DeleteMapping("/users/{id}") //delete user
     void deleteOneUser(@PathVariable int id, @RequestHeader("Authorization") String token){
-
         String email = service.verify(token); // 401
         User user = service.getOneUserInfo(id); // 404
         if (!email.equals(user.getEmail()))
@@ -75,59 +74,61 @@ public class GatewayController {
         service.deleteOneUser(id, email);
     }
 
-    // ok
     @GetMapping("/users/{id}/driver") //get trips where user is driver (departure in future)
     Iterable<Trip> getAllDriverTrips(@PathVariable int id, @RequestHeader("Authorization") String token){
-        String email = service.verify(token);
-        User user = service.getOneUserInfo(id);
-//        if (!email.equals(user.getEmail()))
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
+        String email = service.verify(token);   // 401
+        User user = service.getOneUserInfo(id); // 404
+        if (!email.equals(user.getEmail()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
         return service.getAllDriverTrips(id);
     }
 
-    // ok
     @GetMapping("/users/{id}/passenger") //get trips where user is passenger (departure in future)
-    Iterable<Trip> getAllPassengerTrips(@PathVariable int id, @RequestHeader("Authorization") String token){
+    Map<String, Iterable<Trip>> getAllPassengerTrips(@PathVariable int id,
+        @RequestHeader("Authorization") String token){
         String email = service.verify(token);
         User user = service.getOneUserInfo(id);
-//        if (!email.equals(user.getEmail()))
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
-        return service.getALlTripsUser(id);
+        if (!email.equals(user.getEmail()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
+        return service.getAllPassengerTrips(id);
     }
 
     // return code 401 & 403 missing
-    @GetMapping("/users/{id}/notifications") //get user notifs -- pas testé
-    void getAllNotifs(@PathVariable int id, @RequestHeader("Authorization") String token){
+    @GetMapping("/users/{id}/notifications")
+    Iterable<Notification> getAllNotifs(@PathVariable int id, @RequestHeader("Authorization") String token){
         System.out.println("in");
-        String email = service.verify(token);
-        User user = service.getOneUserInfo(id);
-//        if (!email.equals(user.getEmail()))
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
-        service.getAllNotifs(id);
+        String email = service.verify(token); // 401
+        User user = service.getOneUserInfo(id); // 404
+        if (!email.equals(user.getEmail()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
+        return service.getAllNotifs(id);
     }
 
-    // return code 401 & 403 missing
     @DeleteMapping("/users/{id}/notifications") //delete all notif from user -- pas testé
     void deleteAllNotifs(@PathVariable int id, @RequestHeader("Authorization") String token){
-        String email = service.verify(token);
-        User user = service.getOneUserInfo(id);
-//        if (!email.equals(user.getEmail()))
-//            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
+        String email = service.verify(token);   // 401
+        User user = service.getOneUserInfo(id); // 404
+        if (!email.equals(user.getEmail()))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN); //403
         service.deleteAllNotifs(id);
     }
 
-    // OK
     @PostMapping("/trips") //create a trip
     Trip createOneTrip(@RequestBody NewTrip trip, @RequestHeader("Authorization") String token){
-        String email = service.verify(token);
-        return service.createOneTrip(trip);
+        String email = service.verify(token);  // 401
+        User user = service.getOneUserInfo(email);
+        if (trip.getDriverId() != user.getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN); // 403
+        }
+        return service.createOneTrip(trip); // 400 || 201
     }
 
-    // OK
+
     @GetMapping("/trips") //get list of trip with optional search queries
-    Iterable<Trip> searchAllTrips(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate depDate,
-                        @RequestParam(required = false) Double oLat, @RequestParam(required = false) Double oLon,
-                        @RequestParam(required = false) Double dLat, @RequestParam(required = false) Double dLon) {
+    Iterable<Trip> searchAllTrips(
+        @RequestParam(required = false, name = "departure_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate depDate,
+        @RequestParam(required = false) Double oLat, @RequestParam(required = false) Double oLon,
+        @RequestParam(required = false) Double dLat, @RequestParam(required = false) Double dLon) {
 
         return service.searchAllTrips(depDate, oLat, oLon, dLat, dLon);
     }

@@ -54,12 +54,12 @@ public class TripService {
   }
 
   /**
-   * Reads all trips of a departure date
+   * Reads all trips of a departure date. Ordered by last created.
    * @param departureDate the departure date to search for
    * @return the list of all corresponding trips
    */
   public Iterable<Trip> readByDepartureDate(LocalDate departureDate) {
-    return repository.findByDepartureDate(departureDate);
+    return repository.findByDepartureDateOrderByIdDesc(departureDate);
   }
 
   /**
