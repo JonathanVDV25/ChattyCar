@@ -26,7 +26,6 @@ public class PassengersService {
    */
   public Iterable<Trip> getTripsWhereUserIsPassenger(int userId) {
     Iterable<Passenger> passengers = repository.findByUserId(userId);
-    System.out.println("passengers:"+passengers);
     return StreamSupport.stream(passengers.spliterator(), false)
         .map(passenger -> tripsProxy.readTrip(passenger.getTripId()))
         .toList();
@@ -43,7 +42,8 @@ public class PassengersService {
   /**
    * Get a list of passengers of a trip.
    * @param tripId the id of the trip.
-   * @return
+   * @return tripId the id of the trip
+   * @return list of passenger
    */
   public Iterable<Passenger> getPassengersOfTrip(int tripId) {
     return repository.findByTripId(tripId);
@@ -61,7 +61,7 @@ public class PassengersService {
    * Get a passenger of a trip.
    * @param tripId the id of a trip.
    * @param userId the id of a user.
-   * @return
+   * @return NoIdPassenger the passenger found, else null
    */
   public NoIdPassenger getOne(int tripId, int userId) {
     Passenger p = repository.findByUserIdAndTripId(userId, tripId);

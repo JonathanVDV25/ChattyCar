@@ -62,25 +62,6 @@ public class TripService {
     return repository.findByDepartureDateOrderByIdDesc(departureDate);
   }
 
-  /**
-   * Reads all trips of an originLatitude and an originLongitude
-   * @param originLatitude the latitude of the origin trip
-   * @param originLongitude the longitude of the origin trip
-   * @return the list of all corresponding trips
-   */
-  public Iterable<Trip> readByOriginPosition(double originLatitude, double originLongitude) {
-    return repository.findByOrigin(new Position(originLatitude, originLongitude));
-  }
-
-  /**
-   * Reads all trips of a destination latitude and a destination longitude
-   * @param destLatitude the latitude of the destination trip
-   * @param destLongitude the longitude of the destination trip
-   * @return the list of all corresponding trips
-   */
-  public Iterable<Trip> readByDestinationPosition(double destLatitude, double destLongitude) {
-    return repository.findByDestination(new Position(destLatitude, destLongitude));
-  }
 
   /**
    * Reads all trips of a driver

@@ -36,12 +36,7 @@ public class TripController {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     if ((destinationLat != null && destinationLon == null) || (destinationLat == null && destinationLon != null))
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-    // No need to verify originLon -> above verified if originLat & originLon != null
-//    if (originLat != null)
-//      return service.readByOriginPosition(originLat, originLon);
-//    // Same as above
-//    if (destinationLat != null)
-//      return service.readByDestinationPosition(destinationLat, destinationLon);
+    // origin and destination return all trips
     return service.readAll();
   }
 
@@ -69,20 +64,14 @@ public class TripController {
   }
   
   @GetMapping("/trips/user/{driver_id}")
-  public Iterable<Trip> readAllTripsByDriver(@PathVariable int driver_id) {
+  public Iterable<Trip> readAllTripsByDriver(@PathVariable(name = "driver_id") int driverId) {
     // Vérification si driver existe -> Gateway
-    System.out.println("test");
-    Iterable<Trip> t = service.readByDriver(driver_id);
-    for (Trip tr: t) {
-      System.out.println(tr);
-    }
-    System.out.println("sorti");
-    return t;
+    return service.readByDriver(driverId);
   }
 
   @DeleteMapping("/trips/user/{driver_id}")
-  public void deleteAllTripsByDriver(@PathVariable int driver_id) {
+  public void deleteAllTripsByDriver(@PathVariable(name = "driver_id") int driverId) {
     // Vérification si driver existe -> Gateway
-    service.deleteAllByDriver(driver_id);
+    service.deleteAllByDriver(driverId);
   }
 }

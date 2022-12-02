@@ -296,19 +296,16 @@ public class GatewayService {
     private Iterable<Trip> searchAllTripsByOriginPosition(Double originLat, Double originLon, Iterable<Trip> filteredTrips) {
         // Sort based on distance between originLat & originLon from user to all available trips
         return StreamSupport.stream(filteredTrips.spliterator(), false)
-            .sorted(new Comparator<Trip>() {
-                @Override
-                public int compare(Trip o1, Trip o2) {
+            .sorted((o1, o2) -> {
 
-                    double trip1Dist = positionProxy.getDistance(originLat, originLon,
-                        o1.getOrigin().getLatitude(), o1.getOrigin().getLongitude());
-                    double trip2Dist = positionProxy.getDistance(originLat, originLon,
-                        o2.getOrigin().getLatitude(), o2.getOrigin().getLongitude());
+                double trip1Dist = positionProxy.getDistance(originLat, originLon,
+                    o1.getOrigin().getLatitude(), o1.getOrigin().getLongitude());
+                double trip2Dist = positionProxy.getDistance(originLat, originLon,
+                    o2.getOrigin().getLatitude(), o2.getOrigin().getLongitude());
 
-                    if (trip1Dist < trip2Dist) return -1;
-                    else if (trip1Dist > trip2Dist) return 1;
-                    return 0;
-                }
+                if (trip1Dist < trip2Dist) return -1;
+                else if (trip1Dist > trip2Dist) return 1;
+                return 0;
             }).toList();
     }
 
@@ -323,19 +320,16 @@ public class GatewayService {
         Iterable<Trip> filteredTrips) {
         // Sort based on distance between destinationLat & destinationLon from user to all available trips
         return StreamSupport.stream(filteredTrips.spliterator(), false)
-            .sorted(new Comparator<Trip>() {
-                @Override
-                public int compare(Trip o1, Trip o2) {
+            .sorted((o1, o2) -> {
 
-                    double trip1Dist = positionProxy.getDistance(destinationLat, destinationLon,
-                        o1.getDestination().getLatitude(), o1.getDestination().getLongitude());
-                    double trip2Dist = positionProxy.getDistance(destinationLat, destinationLon,
-                        o2.getDestination().getLatitude(), o2.getDestination().getLongitude());
+                double trip1Dist = positionProxy.getDistance(destinationLat, destinationLon,
+                    o1.getDestination().getLatitude(), o1.getDestination().getLongitude());
+                double trip2Dist = positionProxy.getDistance(destinationLat, destinationLon,
+                    o2.getDestination().getLatitude(), o2.getDestination().getLongitude());
 
-                    if (trip1Dist < trip2Dist) return -1;
-                    else if (trip1Dist > trip2Dist) return 1;
-                    return 0;
-                }
+                if (trip1Dist < trip2Dist) return -1;
+                else if (trip1Dist > trip2Dist) return 1;
+                return 0;
             }).toList();
     }
 
