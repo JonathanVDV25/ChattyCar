@@ -2,7 +2,6 @@ package be.vinci.ipl.chattychar.trips;
 
 import be.vinci.ipl.chattychar.trips.data.TripRepository;
 import be.vinci.ipl.chattychar.trips.models.NewTrip;
-import be.vinci.ipl.chattychar.trips.models.Position;
 import be.vinci.ipl.chattychar.trips.models.Trip;
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
