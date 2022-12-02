@@ -53,7 +53,7 @@ public class NotificationsService {
 
     /**
      * Delete all notification associated to a trip
-     * @param id_trip
+     * @param id_trip the id of the trip
      * @return true if all is deleted, false if not
      */
     public boolean deleteNotificationOfATrip(int id_trip){

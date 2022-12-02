@@ -27,12 +27,6 @@ public class Passenger {
     status = PassengerStatus.PENDING.toString().toLowerCase();
   }
 
-  public Passenger(int userId, int tripId, String status) {
-    this.userId = userId;
-    this.tripId = tripId;
-    this.status = status;
-  }
-
   public NoIdPassenger toNoIdPassenger() {
     return new NoIdPassenger(userId, tripId, status);
   }
