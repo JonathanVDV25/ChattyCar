@@ -1,4 +1,4 @@
-package be.vinci.ipl.chattycar.authentication;
+package be.vinci.ipl.chattycar.authentication.data;
 
 import be.vinci.ipl.chattycar.authentication.models.Credentials;
 import org.springframework.data.repository.CrudRepository;

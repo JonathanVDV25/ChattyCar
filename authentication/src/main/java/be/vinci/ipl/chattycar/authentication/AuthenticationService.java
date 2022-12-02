@@ -1,5 +1,6 @@
 package be.vinci.ipl.chattycar.authentication;
 
+import be.vinci.ipl.chattycar.authentication.data.AuthenticationRepository;
 import be.vinci.ipl.chattycar.authentication.models.Credentials;
 import be.vinci.ipl.chattycar.authentication.models.InsecureCredentials;
 import com.auth0.jwt.JWT;

@@ -34,7 +34,7 @@ paths:
         200:
           description: User added as passenger to a trip
     get:
-      summary: Get one trip where user is the passenger
+      summary: Get one passenger of a trip
       parameters:
         - name: trip_id
           in: path
@@ -89,7 +89,7 @@ paths:
 
   /passengers/users/{user_id}:
     get:
-      summary: Get trips where user is a passenger with a future departure date by status
+      summary: Get trips where user is a passenger with a future departure date
       parameters:
         - name: user_id
           in: path
@@ -102,11 +102,13 @@ paths:
         404:
           description: No user found with this ID
         200:
-          description: Sent user passenger trips
+          description: Sent trips with user as passenger
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/passenger_trips"
+                type: array
+                items:
+                  $ref: "#/components/schemas/trip"
     delete:
       summary: Remove user from passengers of all trips where he is a passenger
       responses:
@@ -225,19 +227,3 @@ components:
         departure: 2022-10-24 10:45:00
         driver_id: 12
         available_seating: 2
-
-    passenger_trips:
-      type: object
-      properties:
-        pending:
-          type: array
-          items:
-            $ref: '#/components/schemas/trip'
-        accepted:
-          type: array
-          items:
-            $ref: '#/components/schemas/trip'
-        refused:
-          type: array
-          items:
-            $ref: '#/components/schemas/trip'

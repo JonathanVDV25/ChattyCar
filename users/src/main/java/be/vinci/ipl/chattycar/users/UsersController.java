@@ -34,7 +34,6 @@ public class UsersController {
   @GetMapping("/users/{user_id}")
   public User readOneById(@PathVariable("user_id") int userId) {
     User user = service.readOneById(userId);
-    System.out.println("user:"+user);
     if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     return user;
   }

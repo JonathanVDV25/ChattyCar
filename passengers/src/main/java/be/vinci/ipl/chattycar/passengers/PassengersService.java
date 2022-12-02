@@ -5,6 +5,7 @@ import be.vinci.ipl.chattycar.passengers.models.NoIdPassenger;
 import be.vinci.ipl.chattycar.passengers.models.Passenger;
 import be.vinci.ipl.chattycar.passengers.data.TripsProxy;
 import be.vinci.ipl.chattycar.passengers.models.Trip;
+import java.time.LocalDate;
 import java.util.stream.StreamSupport;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class PassengersService {
     Iterable<Passenger> passengers = repository.findByUserId(userId);
     return StreamSupport.stream(passengers.spliterator(), false)
         .map(passenger -> tripsProxy.readTrip(passenger.getTripId()))
+        .filter(trip -> trip.getDepartureDate().isAfter(LocalDate.now()))
         .toList();
   }
 

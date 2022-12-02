@@ -25,7 +25,8 @@ public class PassengersController {
   }
 
   @PostMapping("/passengers/{trip_id}/{user_id}")
-  public ResponseEntity<NoIdPassenger> createOnePassenger(@PathVariable(name = "trip_id") Integer tripId,
+  public ResponseEntity<NoIdPassenger> createOnePassenger(
+      @PathVariable(name = "trip_id") Integer tripId,
       @PathVariable(name = "user_id") Integer userId) {
 
     NoIdPassenger passengerDB = service.getOne(tripId, userId);
