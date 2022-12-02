@@ -5,10 +5,10 @@ GET http://localhost:9002/trips
 GET http://localhost:9002/trips?departureDate=2022-10-27
 
 ### Get all trips for specified originLatitude & originLongitude
-GET http://localhost:9002/trips?originLat=45.5&originLon=75.5
+GET http://localhost:9002/trips?originLat=50&originLon=50
 
 ### Get all trips for specified destinationLatitude & destinationLongitude
-GET http://localhost:9002/trips?destinationLat=89.9&destinationLon=100.2
+GET http://localhost:9002/trips?destinationLat=50&destinationLon=50
 
 ### Create trip
 POST http://localhost:9002/trips

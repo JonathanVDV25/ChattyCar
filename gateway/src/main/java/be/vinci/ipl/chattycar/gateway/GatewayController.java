@@ -97,7 +97,6 @@ public class GatewayController {
     // return code 401 & 403 missing
     @GetMapping("/users/{id}/notifications")
     Iterable<Notification> getAllNotifs(@PathVariable int id, @RequestHeader("Authorization") String token){
-        System.out.println("in");
         String email = service.verify(token); // 401
         User user = service.getOneUserInfo(id); // 404
         if (!email.equals(user.getEmail()))

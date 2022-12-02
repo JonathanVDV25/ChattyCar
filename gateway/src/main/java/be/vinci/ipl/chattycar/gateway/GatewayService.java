@@ -166,7 +166,6 @@ public class GatewayService {
      */
     public Iterable<Trip> getAllDriverTrips(int id) {
         Iterable<Trip> trips = tripProxy.readAllTripsByDriver(id);
-        System.out.println(trips);
         return StreamSupport.stream(trips.spliterator(), false)
             .filter(trip -> trip.getDepartureDate().isAfter(LocalDate.now())).toList();
     }
@@ -178,12 +177,10 @@ public class GatewayService {
      */
     public Map<String, Iterable<Trip>> getAllPassengerTrips(int userId) {
         Iterable<Trip> trips = passengersProxy.getTripsWhereUserIsPassenger(userId);
-        System.out.println("trips:"+trips);
         Iterable<Trip> filteredTripsFutureDepartureDate =
             StreamSupport.stream(trips.spliterator(), false)
                 .filter(trip -> trip.getDepartureDate().isAfter(LocalDate.now()))
                 .toList();
-        System.out.println("filtered:"+filteredTripsFutureDepartureDate);
         Map<String, Iterable<Trip>> passengerStatus = new HashMap<>();
 
         List<Trip> accepted = new ArrayList<>();
@@ -191,7 +188,6 @@ public class GatewayService {
         List<Trip> pending = new ArrayList<>();
 
         for(Trip trip : filteredTripsFutureDepartureDate){
-            System.out.println("trip:"+trip);
             NoIdPassenger p = passengersProxy.getOnePassenger(trip.getId(), userId);
             if (p.getStatus().equalsIgnoreCase(PassengerStatus.ACCEPTED.toString()))
                 accepted.add(trip);
@@ -234,7 +230,7 @@ public class GatewayService {
     }
 
     /**
-     * Get a list of trips with the info provided.
+     * Get a list of trips with the info provided. Max 20 trips displayed, filtered out trips without available seating left
      * @param dDate date of the trip.
      * @param oLat the origin's latitude of the trip.
      * @param oLon the origin's longitude of the trip.
@@ -244,24 +240,12 @@ public class GatewayService {
      */
     public Iterable<Trip> searchAllTrips(LocalDate dDate, Double oLat, Double oLon, Double dLat, Double dLon) {
         //return tripProxy.readAll(dDate, oLat, oLon, dLat, dLon);
-        if (dDate != null) {
-            Iterable<Trip> trips = tripProxy.readAll(dDate, null, null, null, null);
-            return filterTripWithSeatingLeft(trips);
-        }
-        if (oLat != null || oLon != null) {
-            Iterable<Trip> trips = tripProxy.readAll(null, oLat, oLon, null, null);
-            Iterable<Trip> tripsFiltered = filterTripWithSeatingLeft(trips);
-            return this.searchAllTripsByOriginPosition(oLat, oLon, tripsFiltered);
-        }
-        if (dLat != null || dLon != null) {
-            Iterable<Trip> trips = tripProxy.readAll(null, null, null, dLat, dLon);
-            Iterable<Trip> tripsFiltered = filterTripWithSeatingLeft(trips);
-            return this.searchAllTripsByDestinationPosition(dLat, dLon, tripsFiltered);
-        }
 
-        // return all
-        Iterable<Trip> trips = tripProxy.readAll(null, null, null, null, null);
-        return filterTripWithSeatingLeft(trips);
+        Iterable<Trip> trips = tripProxy.readAll(dDate, oLat, oLon, dLat, dLon);
+        Iterable<Trip> tripsLimited = StreamSupport.stream(trips.spliterator(), false)
+            .limit(20)
+            .toList();
+        return filterTripWithSeatingLeft(tripsLimited);
     }
 
     /**
@@ -279,59 +263,12 @@ public class GatewayService {
                         passenger.getStatus().equalsIgnoreCase(
                             PassengerStatus.ACCEPTED.toString().toLowerCase()))
                     .count();
-                System.out.println("count:"+count);
                 return count < trip.getAvailableSeating();
             })
             .limit(20)
             .toList();
     }
 
-    /**
-     * Get a list of trips with the origin provided by user.
-     * @param originLat the origin's latitude.
-     * @param originLon the origin's longitude.
-     * @param filteredTrips the sorted trips.
-     * @return the list of trips sorted.
-     */
-    private Iterable<Trip> searchAllTripsByOriginPosition(Double originLat, Double originLon, Iterable<Trip> filteredTrips) {
-        // Sort based on distance between originLat & originLon from user to all available trips
-        return StreamSupport.stream(filteredTrips.spliterator(), false)
-            .sorted((o1, o2) -> {
-
-                double trip1Dist = positionProxy.getDistance(originLat, originLon,
-                    o1.getOrigin().getLatitude(), o1.getOrigin().getLongitude());
-                double trip2Dist = positionProxy.getDistance(originLat, originLon,
-                    o2.getOrigin().getLatitude(), o2.getOrigin().getLongitude());
-
-                if (trip1Dist < trip2Dist) return -1;
-                else if (trip1Dist > trip2Dist) return 1;
-                return 0;
-            }).toList();
-    }
-
-    /**
-     * Get a list of trips with the destination provided by user.
-     * @param destinationLat the destination's latitude.
-     * @param destinationLon the destination's longitude.
-     * @param filteredTrips the sorted trips.
-     * @return the list of trips sorted
-     */
-    private Iterable<Trip> searchAllTripsByDestinationPosition(Double destinationLat, Double destinationLon,
-        Iterable<Trip> filteredTrips) {
-        // Sort based on distance between destinationLat & destinationLon from user to all available trips
-        return StreamSupport.stream(filteredTrips.spliterator(), false)
-            .sorted((o1, o2) -> {
-
-                double trip1Dist = positionProxy.getDistance(destinationLat, destinationLon,
-                    o1.getDestination().getLatitude(), o1.getDestination().getLongitude());
-                double trip2Dist = positionProxy.getDistance(destinationLat, destinationLon,
-                    o2.getDestination().getLatitude(), o2.getDestination().getLongitude());
-
-                if (trip1Dist < trip2Dist) return -1;
-                else if (trip1Dist > trip2Dist) return 1;
-                return 0;
-            }).toList();
-    }
 
     /**
      * Get a trip's info.
@@ -376,7 +313,6 @@ public class GatewayService {
 
         for(Passenger p : passengers){
             User user = usersProxy.readOneById(p.getUserId());
-            System.out.println(p);
             if (p.getStatus().toUpperCase().equals(PassengerStatus.ACCEPTED.toString())){
                 accepted.add(user);
             }
